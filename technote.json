@@ -17,6 +17,7 @@
   },
   "code": {
     "colors": [],
+    "indent": 200,
     "fonts": ["SegoeUIHistoric", "Mono", "Courier", "Menlo", "Consolas", "Monaco"]
   },
   "bullets": {
@@ -27,6 +28,10 @@
     "min_x": 70
   },
   "table": {
-    "size": null
+    "size": null,
+    "ruled": true
+  },
+  "callout": {
+    "italic": true
   }
 }

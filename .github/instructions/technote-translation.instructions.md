@@ -43,6 +43,8 @@ The workflow and checkpoints are in `.github/copilot-instructions.md`. This file
 | `bullets.fonts` / `strip_fonts` | Glyph fonts that mark list items / fonts of separator spans to drop |
 | `caption.italic`, `caption.min_x` | Captions are italic lines starting right of `min_x` |
 | `table.size` | Font size used only by table cells (or null) |
+| `table.ruled` | Detect ruled (vector-drawn) tables with pymupdf `find_tables` and emit Markdown tables |
+| `callout.italic` | All-italic lines become `>` blockquotes (notes, warnings) instead of figure captions |
 | `paragraph.gap`, `short_line_x1` | Start a new paragraph after a vertical gap > `gap`, or after a short line ending in `.` or `:` |
 | `ocr.psm`, `min_conf`, `noise` | Tesseract page-segmentation mode, word confidence threshold, regex of junk lines |
 | `figure_fonts` | `{light, regular, bold: ["path#index", ...]}`: overrides the per-platform defaults |
@@ -60,6 +62,10 @@ monospace font for code instead of colours, `code.colors` can stay empty.
 - Lines are classified in reading order:
   - **heading:** font and size, not code
   - **code:** a code colour, a code font, or an indent within a code block
+  - **ruled table** (`table.ruled`): lines inside a detected table are replaced by one Markdown table; columns
+    follow the first row's text x positions, bold leading rows are the header, rows with an empty first cell are
+    wrapped cells, and a table that repeats the previous header after a page break is continued
+  - **callout** (`callout.italic`): all-italic lines, grouped by vertical gap
   - **caption:** italic and x > `min_x`
   - **bullet**
   - **table row:** `table.size`
@@ -68,7 +74,10 @@ monospace font for code instead of colours, `code.colors` can stay empty.
   - consecutive code lines become one fence
   - the language is guessed: `json`, `html`, `js`, `text`, otherwise `4d`
   - indentation comes from leading spaces or relative x
-- Inline: bold spans → `**…**`; inline code-coloured or monospace spans → `` `…` ``.
+- Inline: bold spans → `**…**`; inline code-coloured or monospace spans → `` `…` ``. `<tag` and `*` in text are
+  escaped (`&lt;`, `\*`) so Markdown does not read them as markup.
+- A line in a code font or colour is code even at the body margin. Set `code.indent` high (e.g. 200) when body
+  text is indented under headings, so indentation alone does not make code.
 - Figures: raster images become `figures/fig-NN.png` (RGBA composited onto white) in document order, with
   `![caption](fig-NN)` placed where the image sits.
   - `layout/fig-NN.json` stores `source`, `page`, `width_pt` (the placed width, reused in the rebuild) and
