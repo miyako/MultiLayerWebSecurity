@@ -1,0 +1,36 @@
+# Prepares the environment for the GitHub Copilot cloud agent.
+# https://docs.github.com/copilot/customizing-copilot/customizing-the-development-environment-for-copilot-coding-agent
+name: Copilot setup steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+  pull_request:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+
+jobs:
+  copilot-setup-steps:   # this job name is required
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install OCR and CJK fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr fonts-noto-cjk fonts-noto-cjk-extra
+
+      - name: Python environment
+        run: make setup
+
+      - name: Check tools
+        run: |
+          tesseract --version | head -1
+          (google-chrome --version || chromium --version) 2>/dev/null
+          fc-list | grep -c "Noto Sans CJK" || true

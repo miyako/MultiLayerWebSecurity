@@ -1,0 +1,5 @@
+{
+  "$comment": "Document-specific settings. Run `make inspect` and review; see tools/config.py for all keys and defaults.",
+  "source_lang": "en",
+  "target_lang": "ja"
+}

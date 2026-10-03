@@ -1,0 +1,51 @@
+name: Localisation request
+description: Ask Copilot to localise the technical note and its 4D demo
+title: "Localise technical note into <language>"
+labels: [localisation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening this issue, commit the English PDF to `document/` and the 4D project to `demo/<Name>/`.
+        Then assign the issue to **Copilot**. The agent follows `.github/copilot-instructions.md` and stops at each
+        checkpoint in the pull request for your review.
+  - type: input
+    id: language
+    attributes:
+      label: Target language
+      description: Language code and name
+      value: "ja (Japanese)"
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - PDF and 4D demo
+        - PDF only
+        - 4D demo only
+    validations:
+      required: true
+  - type: dropdown
+    id: data
+    attributes:
+      label: Demo sample data
+      description: Replace example data (e.g. places) with equivalents relevant to the target audience?
+      options:
+        - Ask me after the first translation
+        - Keep the original data
+        - Localise the data
+  - type: textarea
+    id: style
+    attributes:
+      label: Style and terminology
+      description: Tone, preferred terms, things to avoid. The glossary.md file is the reference.
+      value: |
+        - です・ます調
+        - 4D official Japanese documentation terms
+  - type: textarea
+    id: notes
+    attributes:
+      label: Other directions
+      description: Anything else the agent should know (figures to leave alone, screenshots you will provide, release version...)

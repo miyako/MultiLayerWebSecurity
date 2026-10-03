@@ -1,0 +1,55 @@
+# Builds the localised PDF and the demo zip(s) on Linux and attaches them to the release for a v* tag.
+# If the release already has assets (e.g. created locally with `gh release create`), nothing is uploaded.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to build and release
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Skip if the release already has assets
+        id: existing
+        run: |
+          n=$(gh release view "$TAG" --json assets --jq '.assets | length' 2>/dev/null || echo 0)
+          echo "assets=$n" >> "$GITHUB_OUTPUT"
+          [ "$n" = 0 ] || echo "Release $TAG already has $n asset(s); not uploading."
+
+      - uses: actions/setup-python@v5
+        if: steps.existing.outputs.assets == '0'
+        with:
+          python-version: "3.12"
+
+      - name: Build
+        if: steps.existing.outputs.assets == '0'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk fonts-noto-cjk-extra
+          make release-assets
+
+      - name: Publish
+        if: steps.existing.outputs.assets == '0'
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" build/*.pdf build/*.zip
+          else
+            gh release create "$TAG" build/*.pdf build/*.zip --title "$TAG" \
+              --notes "Built on Linux by GitHub Actions (Noto Sans CJK fonts)."
+          fi

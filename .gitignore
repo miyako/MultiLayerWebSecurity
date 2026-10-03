@@ -1,0 +1,10 @@
+.venv/
+build/
+__pycache__/
+.DS_Store
+
+# 4D runtime / user data / caches
+demo/*/Data/
+demo/*/Logs/
+demo/*/userPreferences.*/
+demo/*/Project/DerivedData/

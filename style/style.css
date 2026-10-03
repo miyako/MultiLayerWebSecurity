@@ -1,0 +1,104 @@
+/* Layout for the translated technical note. Adjust to mirror the original.
+   build.py prepends `:root { --accent }` and `@page { size }` from technote.json.
+   Font stacks cover macOS (Hiragino) and Linux (Noto CJK); edit for other scripts. */
+
+@page {
+  margin: 1in 1in 0.9in 1in;
+  @bottom-right {
+    content: counter(page);
+    font: 10pt "Hiragino Sans", "Noto Sans CJK JP", "Helvetica Neue", Arial, sans-serif;
+    color: #444;
+  }
+}
+@page :first {
+  @bottom-right { content: none; }
+}
+
+html {
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans CJK JP", "Helvetica Neue", Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.75;
+  color: #111;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+body { margin: 0; }
+
+p { margin: 0 0 0.6em; text-align: justify; line-break: strict; }
+strong { font-weight: 600; }
+
+h1, h2, h3, h4 {
+  color: var(--accent, #2f5496);
+  font-weight: 600;
+  line-height: 1.4;
+  break-after: avoid;
+}
+h2 { font-size: 13pt; margin: 1.6em 0 0.6em; }
+h3 { font-size: 12pt; margin: 1.3em 0 0.5em; }
+h4 { font-size: 11pt; margin: 1.1em 0 0.4em; }
+
+/* Cover */
+.cover {
+  break-after: page;
+  text-align: center;
+  padding-top: 2.6in;
+}
+.cover h1 { font-size: 20pt; margin: 0 0 1.2em; }
+.cover p { text-align: center; margin: 0 0 0.6em; }
+
+/* Table of contents */
+.toc { break-after: page; }
+.toc-title { margin-top: 0; }
+.toc ol { list-style: none; padding: 0; margin: 0; }
+.toc li { margin: 0.15em 0; }
+.toc li.l3 { padding-left: 1.2em; }
+.toc li.l4 { padding-left: 2.4em; }
+.toc a { display: flex; color: inherit; text-decoration: none; }
+.toc .t { flex: 0 1 auto; }
+.toc a::after {
+  content: "";
+  flex: 1 1 auto;
+  order: 1;
+  border-bottom: 1px dotted #999;
+  margin: 0 0.4em 0.45em;
+}
+.toc .p { order: 2; min-width: 1.6em; text-align: right; }
+
+/* Lists */
+ul { margin: 0 0 0.6em; padding-left: 1.6em; }
+li { margin: 0.1em 0; }
+
+/* Code: kept exactly as in the original */
+pre {
+  font-family: "SF Mono", Menlo, Monaco, "DejaVu Sans Mono", "Noto Sans Mono CJK JP", monospace;
+  font-size: 8.8pt;
+  line-height: 1.5;
+  background: #f5f6f8;
+  border-left: 3px solid #b4c6e7;
+  padding: 0.6em 0.9em;
+  margin: 0.4em 0 0.9em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  break-inside: avoid;
+}
+code { font-family: inherit; }
+
+/* Figures */
+figure {
+  margin: 1em 0 1.2em;
+  text-align: center;
+  break-inside: avoid;
+}
+figure img { max-width: 100%; }
+figcaption {
+  font-size: 9.5pt;
+  font-style: italic;
+  color: #333;
+  margin-top: 0.4em;
+}
+
+/* Tables */
+table { border-collapse: collapse; margin: 0.4em auto 1em; font-size: 10pt; }
+th, td { border-bottom: 1px solid #ccc; padding: 0.25em 1.2em; }
+th { text-align: left; border-bottom: 1.5px solid #888; }
+td:last-child, th:last-child { text-align: right; }
