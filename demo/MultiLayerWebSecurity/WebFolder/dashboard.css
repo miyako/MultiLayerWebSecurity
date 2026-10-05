@@ -1695,3 +1695,8 @@ kbd {
   color: var(--text-2);
   white-space: nowrap;
 }
+
+/* Japanese: wide tracking from the Latin design breaks up kana and kanji */
+html:lang(ja) *:not(.header-title h1:not([data-i18n])):not(.login-brand h1):not(.live-clock) {
+  letter-spacing: normal !important;
+}

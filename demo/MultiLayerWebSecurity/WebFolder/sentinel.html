@@ -261,7 +261,12 @@
       font-size: 10px;
       opacity: 0.75;
     }
-</style>
+
+    /* Japanese: wide tracking from the Latin design breaks up kana and kanji */
+    html:lang(ja) *:not(.header-title h1:not([data-i18n])):not(.login-brand h1):not(.live-clock) {
+      letter-spacing: normal !important;
+    }
+  </style>
 </head>
 <body>
 

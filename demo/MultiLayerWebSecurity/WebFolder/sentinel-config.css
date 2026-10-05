@@ -152,3 +152,8 @@ body {
   background: rgba(46,160,67,0.10); color: var(--green, #2ea043);
   border-color: var(--green, #2ea043);
 }
+
+/* Japanese: wide tracking from the Latin design breaks up kana and kanji */
+html:lang(ja) *:not(.header-title h1:not([data-i18n])):not(.login-brand h1):not(.live-clock) {
+  letter-spacing: normal !important;
+}
