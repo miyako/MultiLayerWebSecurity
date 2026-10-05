@@ -42,7 +42,7 @@ Sentinelは、4D v21.0 LTSの2つの機能、HTTPリクエストハンドラー�
 
 > **重要**：IP BlacklistパネルのClear Allボタンをクリックすると、ip_lists.jsonファイルの内容が空になります。その場合は、127.0.0.1をはじめとする必要なアドレスを、手動またはダッシュボードの許可リストボタンから再登録する必要があります。
 
-> **バグACI0106333（Windows固有）**：Windowsでは、Process activity.processes[0].cpuUsageがmacOSと比べて過大な値を返します。このテレメトリの差異によりCPUパニックゲートが作動し、受信リクエストがHTTP 503ステータスで拒否されます。この問題は4D 21 R3で修正されています。Windowsでは4D 21 R3以降を使用してください。macOSには影響ありません。
+> **バグACI0106333（Windows固有）**：Windowsでは、Process activity.processes[0].cpuUsageがmacOSと比べて過大な値を返します。このテレメトリの差異によりCPUパニックゲートが作動し、受信リクエストがHTTP 503ステータスで拒否されます。この問題は4D 21 R3で修正されています。macOSには影響ありません。
 
 ## アーキテクチャの概要
 
