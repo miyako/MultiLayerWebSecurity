@@ -750,6 +750,13 @@ header {
 .defense-card:has(.toggle-btn[data-state="true"])  .threat-indicator::after { content: ' Engaged'; }
 .defense-card:has(.toggle-btn[data-state="false"]) .threat-indicator::after { content: ' Disengaged'; }
 
+html[lang="ja"] .toggle-state-label::after,
+html[lang="ja"] .defense-card:has(.toggle-btn[data-state="true"])  .toggle-state-label::after { content: '有効'; }
+html[lang="ja"] .defense-card:has(.toggle-btn[data-state="false"]) .toggle-state-label::after { content: '無効'; }
+html[lang="ja"] .threat-indicator::after,
+html[lang="ja"] .defense-card:has(.toggle-btn[data-state="true"])  .threat-indicator::after { content: ' 有効'; }
+html[lang="ja"] .defense-card:has(.toggle-btn[data-state="false"]) .threat-indicator::after { content: ' 無効'; }
+
 .threat-indicator .dot {
   width: 5px;
   height: 5px;

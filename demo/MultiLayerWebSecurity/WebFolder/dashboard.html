@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sentinel — 4D Defense Command</title>
+  <title data-i18n="dash.page.title">Sentinel — 4D Defense Command</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <script>(function(){var t=localStorage.getItem('sentinel-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}());</script>
 
   <script>(function(){var d=localStorage.getItem('sentinel-density')||'default';document.documentElement.setAttribute('data-density',d);}());</script>
+  <script src="i18n.js"></script>
+  <script src="i18n.dashboard.js"></script>
   <link rel="stylesheet" href="dashboard.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMyIgZmlsbD0iIzFkNmZlYiIvPjx0ZXh0IHg9IjgiIHk9IjEyIiBmb250LXNpemU9IjExIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlM8L3RleHQ+PC9zdmc+">
 </head>
@@ -22,11 +24,11 @@
   <div id="panic-banner" class="panic-bar hidden">
     <div class="panic-inner">
       <span class="panic-icon">⚠</span>
-      <span id="panic-label" class="panic-title">PANIC MODE ACTIVE</span>
+      <span id="panic-label" class="panic-title" data-i18n="dash.panic.modeActive">PANIC MODE ACTIVE</span>
       <span id="panic-reason" class="panic-reason"></span>
       <span id="panic-timer" class="panic-timer">—</span>
       <button id="btn-lift-panic" class="btn btn-amber panic-lift-btn">
-        <span class="btn-icon">△</span> Lift
+        <span class="btn-icon">△</span> <span data-i18n="dash.panic.lift">Lift</span>
       </button>
     </div>
   </div>
@@ -43,7 +45,7 @@
         <div class="logo-mark"></div>
         <div class="header-title">
           <h1>Sentinel</h1>
-          <p>4D Defense Command Center</p>
+          <p data-i18n="dash.header.subtitle">4D Defense Command Center</p>
         </div>
       </div>
 
@@ -53,69 +55,72 @@
       </div>
 
       <div class="header-right">
-        <span id="threat-badge" class="threat-badge threat-normal">NORMAL</span>
+        <span id="threat-badge" class="threat-badge threat-normal" data-i18n="dash.threat.normal">NORMAL</span>
         <div class="v-sep"></div>
         <div class="meta-cluster">
-          <span class="meta-pair">UP <span id="uptime-val" class="mono">—</span></span>
+          <span class="meta-pair"><span data-i18n="dash.header.uptime">UP</span> <span id="uptime-val" class="mono">—</span></span>
           <span class="meta-sep">·</span>
           <span id="timestamp-val" class="mono meta-ts">—</span>
         </div>
         <div class="v-sep"></div>
 
-        <div class="density-slider" role="radiogroup" aria-label="Display density">
+        <div class="density-slider" role="radiogroup" aria-label="Display density" data-i18n-aria-label="dash.header.densityGroup">
           <button class="density-btn" data-density="compact" role="radio"
-                  aria-checked="false" title="Compact (forensic mode)">◧</button>
+                  aria-checked="false" title="Compact (forensic mode)" data-i18n-title="dash.header.densityCompact">◧</button>
           <button class="density-btn" data-density="default" role="radio"
-                  aria-checked="true"  title="Default density">◫</button>
+                  aria-checked="true"  title="Default density" data-i18n-title="dash.header.densityDefault">◫</button>
           <button class="density-btn" data-density="roomy" role="radio"
-                  aria-checked="false" title="Roomy (wall display)">◨</button>
+                  aria-checked="false" title="Roomy (wall display)" data-i18n-title="dash.header.densityRoomy">◨</button>
         </div>
         <div class="v-sep"></div>
         <button class="btn btn-icon-only btn-icon-cog" id="btn-open-equalizer-header"
                 title="Open Security Equalizer (configuration editor)"
-                aria-label="Open Security Equalizer">
+                aria-label="Open Security Equalizer"
+                data-i18n-title="dash.header.equalizerTitle" data-i18n-aria-label="dash.header.openEqualizer">
           <span class="cog-icon" aria-hidden="true">⚙</span>
         </button>
         <div class="v-sep"></div>
-        <button class="btn btn-icon-only" id="btn-theme-toggle" title="Toggle light / dark mode" aria-label="Toggle theme">
+        <button class="btn btn-icon-only" id="btn-theme-toggle" title="Toggle light / dark mode" aria-label="Toggle theme"
+                data-i18n-title="dash.header.themeTitle" data-i18n-aria-label="dash.header.themeAria">
           <span id="theme-icon">☀</span>
         </button>
+        <button class="btn btn-icon-only" id="btn-lang-toggle" data-lang-toggle type="button">JA</button>
         <button class="btn" id="btn-logout">
-          <span class="btn-icon">⎋</span> Logout
+          <span class="btn-icon">⎋</span> <span data-i18n="dash.header.logout">Logout</span>
         </button>
       </div>
     </header>
 
 
-    <div class="section-label" id="section-telemetry">Traffic Telemetry</div>
+    <div class="section-label" id="section-telemetry" data-i18n="dash.section.telemetry">Traffic Telemetry</div>
     <div class="metrics-row">
 
       <div class="metric-card">
-        <div class="metric-label">Total Requests <span class="metric-icon">◈</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.total">Total Requests</span> <span class="metric-icon">◈</span></div>
         <div class="metric-value"><span id="s-total">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-accent"></div></div>
-        <div class="metric-sub">All inbound requests</div>
+        <div class="metric-sub" data-i18n="dash.metric.totalSub">All inbound requests</div>
       </div>
 
       <div class="metric-card">
-        <div class="metric-label">Blocked <span class="metric-icon">◉</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.blocked">Blocked</span> <span class="metric-icon">◉</span></div>
         <div class="metric-value"><span id="s-blocked">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-red"></div></div>
-        <div class="metric-sub">IP + intercept blocks</div>
+        <div class="metric-sub" data-i18n="dash.metric.blockedSub">IP + intercept blocks</div>
       </div>
 
       <div class="metric-card">
-        <div class="metric-label">Rate Limited <span class="metric-icon">◈</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.rateLimited">Rate Limited</span> <span class="metric-icon">◈</span></div>
         <div class="metric-value"><span id="s-rl">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-amber"></div></div>
-        <div class="metric-sub">Token bucket rejections</div>
+        <div class="metric-sub" data-i18n="dash.metric.rateLimitedSub">Token bucket rejections</div>
       </div>
 
       <div class="metric-card">
-        <div class="metric-label">WAF Blocked <span class="metric-icon">⬡</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.waf">WAF Blocked</span> <span class="metric-icon">⬡</span></div>
         <div class="metric-value"><span id="s-waf">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-red"></div></div>
-        <div class="metric-sub">Recon + traversal drops</div>
+        <div class="metric-sub" data-i18n="dash.metric.wafSub">Recon + traversal drops</div>
       </div>
 
     </div>
@@ -123,72 +128,72 @@
     <div class="metrics-row mb-24">
 
       <div class="metric-card">
-        <div class="metric-label">Allowed <span class="metric-icon">◇</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.allowed">Allowed</span> <span class="metric-icon">◇</span></div>
         <div class="metric-value"><span id="s-allowed">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-green"></div></div>
-        <div class="metric-sub">Clean requests served</div>
+        <div class="metric-sub" data-i18n="dash.metric.allowedSub">Clean requests served</div>
       </div>
 
       <div class="metric-card">
-        <div class="metric-label">Honeypot Hits <span class="metric-icon">◉</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.honeypot">Honeypot Hits</span> <span class="metric-icon">◉</span></div>
         <div class="metric-value"><span id="s-honeypot">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-purple"></div></div>
-        <div class="metric-sub">Trap URL detections</div>
+        <div class="metric-sub" data-i18n="dash.metric.honeypotSub">Trap URL detections</div>
       </div>
 
       <div class="metric-card">
-        <div class="metric-label">Panic Rejected <span class="metric-icon">◈</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.panic">Panic Rejected</span> <span class="metric-icon">◈</span></div>
         <div class="metric-value"><span id="s-panic">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-blue"></div></div>
-        <div class="metric-sub">Emergency mode drops</div>
+        <div class="metric-sub" data-i18n="dash.metric.panicSub">Emergency mode drops</div>
       </div>
 
       <div class="metric-card">
-        <div class="metric-label">Req / Min <span class="metric-icon">◇</span></div>
+        <div class="metric-label"><span data-i18n="dash.metric.rate">Req / Min</span> <span class="metric-icon">◇</span></div>
         <div class="metric-value"><span id="s-rate">0</span></div>
         <div class="cpu-bar-track"><div class="cpu-bar-fill bar-accent"></div></div>
-        <div class="metric-sub">Current traffic rate</div>
+        <div class="metric-sub" data-i18n="dash.metric.rateSub">Current traffic rate</div>
       </div>
 
     </div>
 
 
-    <div class="section-label" id="section-defense-master">Global Defense Master</div>
+    <div class="section-label" id="section-defense-master" data-i18n="dash.section.defenseMaster">Global Defense Master</div>
     <div class="defense-card" id="dcard-master" style="margin-bottom:18px;border-width:2px">
       <div class="defense-card-header">
         <div>
-          <div class="defense-card-title">⚡ MASTER SWITCH</div>
-          <div class="defense-card-sub" title="When OFF: bypasses every defense layer INCLUDING Panic Mode. Use only for clean attack-simulation baselines.">OVERRIDES EVERY DEFENSE LAYER — INCLUDING PANIC MODE</div>
+          <div class="defense-card-title" data-i18n="dash.master.title">⚡ MASTER SWITCH</div>
+          <div class="defense-card-sub" data-i18n="dash.master.sub" data-i18n-title="dash.master.subTitle" title="When OFF: bypasses every defense layer INCLUDING Panic Mode. Use only for clean attack-simulation baselines.">OVERRIDES EVERY DEFENSE LAYER — INCLUDING PANIC MODE</div>
         </div>
         <div class="toggle-wrap">
           <button class="toggle-btn" id="tog-master" data-layer="master" data-state="true"
-                  aria-label="Toggle global defense master"
+                  aria-label="Toggle global defense master" data-i18n-aria-label="dash.master.toggleAria" data-i18n-title="dash.master.toggleTitle"
                   title="ON  → all defenses active (CPU panic, traffic panic, blocklist, WAF, rate-limit, Sonar IDS)&#10;OFF → all defenses bypassed for clean attack-simulation baselines. Panic Mode flags may still appear active on the dashboard (workers keep monitoring) but no requests are blocked."></button>
           <span class="toggle-state-label" id="tlabel-master"></span>
         </div>
       </div>
       <div class="defense-divider"></div>
-      <div id="master-status-line" style="font-size:11px;color:var(--text-secondary);padding:4px 0;line-height:1.5">
+      <div id="master-status-line" data-i18n="dash.master.statusOn" style="font-size:11px;color:var(--text-secondary);padding:4px 0;line-height:1.5">
         All defenses active — including Panic Mode fail-safe. Per-layer toggles below operate normally.
       </div>
       <div style="font-size:10px;color:var(--text-3);padding:6px 0 2px;line-height:1.45;border-top:1px dashed var(--border-soft);margin-top:6px">
-        <strong style="color:var(--amber)">⚠ Panic Mode behavior:</strong> when Master is OFF, Panic Mode is also bypassed — the dashboard indicator may show ACTIVE (workers keep watching CPU + traffic) but no requests are blocked. This is intentional, so attack-simulation baselines stay clean. Turn Master back ON to re-engage every layer including the panic fail-safe.
+        <strong style="color:var(--amber)" data-i18n="dash.master.panicNoteTitle">⚠ Panic Mode behavior:</strong> <span data-i18n="dash.master.panicNote">when Master is OFF, Panic Mode is also bypassed — the dashboard indicator may show ACTIVE (workers keep watching CPU + traffic) but no requests are blocked. This is intentional, so attack-simulation baselines stay clean. Turn Master back ON to re-engage every layer including the panic fail-safe.</span>
       </div>
     </div>
 
 
-    <div class="section-label" id="section-defense-layers">Defense Layers</div>
+    <div class="section-label" id="section-defense-layers" data-i18n="dash.section.defenseLayers">Defense Layers</div>
     <div class="defense-grid defense-grid-4">
 
 
       <div class="defense-card" id="dcard-blitz">
         <div class="defense-card-header">
           <div>
-            <div class="defense-card-title">IP Interceptor</div>
-            <div class="defense-card-sub">PER-IP BLOCKLIST + STRIKES</div>
+            <div class="defense-card-title" data-i18n="dash.layer.blitz">IP Interceptor</div>
+            <div class="defense-card-sub" data-i18n="dash.layer.blitzSub">PER-IP BLOCKLIST + STRIKES</div>
           </div>
           <div class="toggle-wrap">
-            <button class="toggle-btn" id="tog-blitz" data-layer="blitz" data-state="true" aria-label="Toggle IP Interceptor"></button>
+            <button class="toggle-btn" id="tog-blitz" data-layer="blitz" data-state="true" aria-label="Toggle IP Interceptor" data-i18n-aria-label="dash.layer.blitzToggle"></button>
             <span class="toggle-state-label" id="tlabel-blitz"></span>
           </div>
         </div>
@@ -196,19 +201,19 @@
         <div class="defense-divider"></div>
         <div class="defense-stats">
           <div class="defense-stat">
-            <div class="defense-stat-label">Rate Cap</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.rateCap">Rate Cap</div>
             <div class="defense-stat-value" id="stat-rate-cap">150 / 60s</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Window</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.window">Window</div>
             <div class="defense-stat-value" id="stat-window">60s</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Strike Cap</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.strikeCap">Strike Cap</div>
             <div class="defense-stat-value" id="stat-strike-cap">5</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Block TTL</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.blockTtl">Block TTL</div>
             <div class="defense-stat-value" id="stat-block-ttl">300s</div>
           </div>
         </div>
@@ -218,11 +223,11 @@
       <div class="defense-card" id="dcard-ratelimit">
         <div class="defense-card-header">
           <div>
-            <div class="defense-card-title">Rate-Limit Shield</div>
-            <div class="defense-card-sub">PER-IP TOKEN BUCKET</div>
+            <div class="defense-card-title" data-i18n="dash.layer.ratelimit">Rate-Limit Shield</div>
+            <div class="defense-card-sub" data-i18n="dash.layer.ratelimitSub">PER-IP TOKEN BUCKET</div>
           </div>
           <div class="toggle-wrap">
-            <button class="toggle-btn" id="tog-ratelimit" data-layer="ratelimit" data-state="true" aria-label="Toggle Rate Limit"></button>
+            <button class="toggle-btn" id="tog-ratelimit" data-layer="ratelimit" data-state="true" aria-label="Toggle Rate Limit" data-i18n-aria-label="dash.layer.ratelimitToggle"></button>
             <span class="toggle-state-label" id="tlabel-ratelimit"></span>
           </div>
         </div>
@@ -230,19 +235,19 @@
         <div class="defense-divider"></div>
         <div class="defense-stats">
           <div class="defense-stat">
-            <div class="defense-stat-label">Burst Size</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.burstSize">Burst Size</div>
             <div class="defense-stat-value" id="stat-burst-size">20 req</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Burst Window</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.burstWindow">Burst Window</div>
             <div class="defense-stat-value" id="stat-burst-window">5s</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Sustained</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.sustained">Sustained</div>
             <div class="defense-stat-value" id="stat-sustained">2.5 req/s</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">CPU Panic</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.cpuPanic">CPU Panic</div>
             <div class="defense-stat-value" id="stat-cpu-panic">85%</div>
           </div>
         </div>
@@ -252,11 +257,11 @@
       <div class="defense-card" id="dcard-handler">
         <div class="defense-card-header">
           <div>
-            <div class="defense-card-title">Handler Defense</div>
-            <div class="defense-card-sub">HANDLER-SIDE GATE VERDICT</div>
+            <div class="defense-card-title" data-i18n="dash.layer.handler">Handler Defense</div>
+            <div class="defense-card-sub" data-i18n="dash.layer.handlerSub">HANDLER-SIDE GATE VERDICT</div>
           </div>
           <div class="toggle-wrap">
-            <button class="toggle-btn" id="tog-handler" data-layer="handler" data-state="true" aria-label="Toggle Handler"></button>
+            <button class="toggle-btn" id="tog-handler" data-layer="handler" data-state="true" aria-label="Toggle Handler" data-i18n-aria-label="dash.layer.handlerToggle"></button>
             <span class="toggle-state-label" id="tlabel-handler"></span>
           </div>
         </div>
@@ -264,19 +269,19 @@
         <div class="defense-divider"></div>
         <div class="defense-stats">
           <div class="defense-stat">
-            <div class="defense-stat-label">Intercept Gate</div>
-            <div class="defense-stat-value" id="stat-thaad-gate" style="color:var(--green)">Active</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.interceptGate">Intercept Gate</div>
+            <div class="defense-stat-value" id="stat-thaad-gate" style="color:var(--green)" data-i18n="dash.layer.active">Active</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">RL Gate</div>
-            <div class="defense-stat-value" id="stat-rl-gate" style="color:var(--green)">Active</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.rlGate">RL Gate</div>
+            <div class="defense-stat-value" id="stat-rl-gate" style="color:var(--green)" data-i18n="dash.layer.active">Active</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Heavy Endpoint</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.heavyEndpoint">Heavy Endpoint</div>
             <div class="defense-stat-value" style="color:var(--text-3)">/heavy</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Catch-All</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.catchAll">Catch-All</div>
             <div class="defense-stat-value" style="color:var(--text-3)">/.* → 404</div>
           </div>
         </div>
@@ -286,11 +291,11 @@
       <div class="defense-card" id="dcard-waf">
         <div class="defense-card-header">
           <div>
-            <div class="defense-card-title">WAF Inspector</div>
-            <div class="defense-card-sub">URL CANONICALIZATION + RECON</div>
+            <div class="defense-card-title" data-i18n="dash.layer.waf">WAF Inspector</div>
+            <div class="defense-card-sub" data-i18n="dash.layer.wafSub">URL CANONICALIZATION + RECON</div>
           </div>
           <div class="toggle-wrap">
-            <button class="toggle-btn" id="tog-waf" data-layer="waf" data-state="true" aria-label="Toggle WAF"></button>
+            <button class="toggle-btn" id="tog-waf" data-layer="waf" data-state="true" aria-label="Toggle WAF" data-i18n-aria-label="dash.layer.wafToggle"></button>
             <span class="toggle-state-label" id="tlabel-waf"></span>
           </div>
         </div>
@@ -298,19 +303,19 @@
         <div class="defense-divider"></div>
         <div class="defense-stats">
           <div class="defense-stat">
-            <div class="defense-stat-label">Path Traversal</div>
-            <div class="defense-stat-value" style="color:var(--green)">Active</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.pathTraversal">Path Traversal</div>
+            <div class="defense-stat-value" style="color:var(--green)" data-i18n="dash.layer.active">Active</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">Recon Detection</div>
-            <div class="defense-stat-value" style="color:var(--green)">Active</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.reconDetection">Recon Detection</div>
+            <div class="defense-stat-value" style="color:var(--green)" data-i18n="dash.layer.active">Active</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">URL Normalizer</div>
-            <div class="defense-stat-value" style="color:var(--green)">Active</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.urlNormalizer">URL Normalizer</div>
+            <div class="defense-stat-value" style="color:var(--green)" data-i18n="dash.layer.active">Active</div>
           </div>
           <div class="defense-stat">
-            <div class="defense-stat-label">WAF Rejections</div>
+            <div class="defense-stat-label" data-i18n="dash.layer.wafRejections">WAF Rejections</div>
             <div class="defense-stat-value" id="s-waf-detail">—</div>
           </div>
         </div>
@@ -319,7 +324,7 @@
     </div>
 
 
-    <div class="section-label" id="section-intelligence">Intelligence</div>
+    <div class="section-label" id="section-intelligence" data-i18n="dash.section.intelligence">Intelligence</div>
     <div class="intel-grid">
 
 
@@ -327,20 +332,20 @@
 
         <div class="graph-section">
           <div class="section-label" style="margin-bottom:10px">
-            CPU Timeline
+            <span data-i18n="dash.graph.cpuTimeline">CPU Timeline</span>
             <span class="mono" style="font-size:10px;color:var(--accent);margin-left:8px" id="cpu-val">0%</span>
           </div>
           <canvas id="cpu-canvas" width="800" height="90"></canvas>
           <div class="graph-meta">
-            <span>AVG <span id="cpu-avg">0%</span></span>
-            <span>HEAVIEST <span id="cpu-heaviest">—</span></span>
-            <span>PROCESSES <span id="cpu-procs">—</span></span>
+            <span><span data-i18n="dash.graph.avg">AVG</span> <span id="cpu-avg">0%</span></span>
+            <span><span data-i18n="dash.graph.heaviest">HEAVIEST</span> <span id="cpu-heaviest">—</span></span>
+            <span><span data-i18n="dash.graph.processes">PROCESSES</span> <span id="cpu-procs">—</span></span>
           </div>
         </div>
 
         <div class="graph-section">
           <div class="section-label" style="margin-bottom:10px">
-            Traffic Rate
+            <span data-i18n="dash.graph.trafficRate">Traffic Rate</span>
             <span class="mono" style="font-size:10px;color:var(--green);margin-left:8px" id="rate-val">0 req/min</span>
           </div>
           <canvas id="rate-canvas" width="800" height="70"></canvas>
@@ -351,34 +356,35 @@
 
       <div class="panel">
         <div class="section-label" style="margin-bottom:12px">
-          IP Blacklist
+          <span data-i18n="dash.ip.title">IP Blacklist</span>
           <span class="count-badge" id="blocklist-badge">0</span>
           <button class="btn btn-danger btn-sm" id="btn-clear-iplists"
                   style="padding:3px 9px;font-size:10px;margin-left:auto"
-                  title="Clear blocklist, allowlist, and strikes inside Data/ip_lists.json (file structure preserved)">
+                  title="Clear blocklist, allowlist, and strikes inside Data/ip_lists.json (file structure preserved)"
+                  data-i18n="dash.ip.clearAll" data-i18n-title="dash.ip.clearAllTitle">
             ⌫ Clear All
           </button>
         </div>
         <div id="blocklist-body" class="scrollable-list">—</div>
         <div class="ip-controls-row">
-          <input id="ip-input" type="text" placeholder="IP address" class="ip-field">
-          <button class="btn btn-danger btn-sm" id="btn-block-ip">Block</button>
-          <button class="btn btn-sm" id="btn-unblock-ip">Unblock</button>
-          <button class="btn btn-green btn-sm" id="btn-allow-ip">Allow</button>
+          <input id="ip-input" type="text" placeholder="IP address" data-i18n-placeholder="dash.ip.placeholder" class="ip-field">
+          <button class="btn btn-danger btn-sm" id="btn-block-ip" data-i18n="dash.ip.block">Block</button>
+          <button class="btn btn-sm" id="btn-unblock-ip" data-i18n="dash.ip.unblock">Unblock</button>
+          <button class="btn btn-green btn-sm" id="btn-allow-ip" data-i18n="dash.ip.allow">Allow</button>
         </div>
       </div>
 
     </div>
 
 
-    <div class="section-label" id="section-operations">Operations</div>
+    <div class="section-label" id="section-operations" data-i18n="dash.section.operations">Operations</div>
     <div class="ops-grid">
 
 
       <div class="panel">
         <div class="section-label" style="margin-bottom:10px">
-          Worker Mesh
-          <button class="btn btn-sm" id="btn-refresh-workers" style="padding:3px 9px;font-size:10px;margin-left:4px">↻ Refresh</button>
+          <span data-i18n="dash.workers.title">Worker Mesh</span>
+          <button class="btn btn-sm" id="btn-refresh-workers" style="padding:3px 9px;font-size:10px;margin-left:4px" data-i18n="dash.workers.refresh">↻ Refresh</button>
         </div>
         <div id="worker-list" class="scrollable-list worker-list">—</div>
       </div>
@@ -386,63 +392,63 @@
 
       <div class="panel">
         <div class="section-label" style="margin-bottom:10px">
-          Alerts
+          <span data-i18n="dash.alerts.title">Alerts</span>
           <span class="count-badge red hidden" id="alert-badge">0</span>
         </div>
         <div id="alerts-list" class="scrollable-list">—</div>
         <div class="panel-actions">
-          <button class="btn btn-sm" id="btn-ack-all">Ack All</button>
-          <button class="btn btn-sm" id="btn-clear-alerts">Clear</button>
+          <button class="btn btn-sm" id="btn-ack-all" data-i18n="dash.alerts.ackAll">Ack All</button>
+          <button class="btn btn-sm" id="btn-clear-alerts" data-i18n="dash.alerts.clear">Clear</button>
         </div>
       </div>
 
 
       <div class="panel">
         <div class="section-label" style="margin-bottom:10px">
-          Honeypot Hits
+          <span data-i18n="dash.honeypot.title">Honeypot Hits</span>
           <span class="count-badge purple" id="honeypot-badge">0</span>
         </div>
-        <div id="honeypot-list" class="scrollable-list">No hits recorded.</div>
+        <div id="honeypot-list" class="scrollable-list" data-i18n="dash.honeypot.empty">No hits recorded.</div>
       </div>
 
     </div>
 
 
-    <div class="section-label" id="section-controls">Controls</div>
+    <div class="section-label" id="section-controls" data-i18n="dash.section.controls">Controls</div>
     <div class="ctrl-grid">
 
 
       <div class="panel">
-        <div class="section-label" style="margin-bottom:16px">Emergency Panic</div>
+        <div class="section-label" style="margin-bottom:16px" data-i18n="dash.panicCtl.title">Emergency Panic</div>
         <div class="ctrl-row">
-          <label class="ctrl-label" for="panic-duration">Duration</label>
+          <label class="ctrl-label" for="panic-duration" data-i18n="dash.panicCtl.duration">Duration</label>
           <input id="panic-duration" type="number" value="60" min="5" max="3600" class="num-input">
-          <span class="ctrl-unit">seconds</span>
+          <span class="ctrl-unit" data-i18n="dash.panicCtl.seconds">seconds</span>
         </div>
         <div class="ctrl-actions">
           <button class="btn btn-danger" id="btn-trigger-panic">
-            <span class="btn-icon">⚡</span> Trigger
+            <span class="btn-icon">⚡</span> <span data-i18n="dash.panicCtl.trigger">Trigger</span>
           </button>
           <button class="btn btn-amber" id="btn-lift-panic-ctrl">
-            <span class="btn-icon">△</span> Lift
+            <span class="btn-icon">△</span> <span data-i18n="dash.panic.lift">Lift</span>
           </button>
         </div>
       </div>
 
 
       <div class="panel">
-        <div class="section-label" style="margin-bottom:16px">Attack Simulation</div>
+        <div class="section-label" style="margin-bottom:16px" data-i18n="dash.attack.title">Attack Simulation</div>
         <div class="ctrl-row">
           <select id="attack-vector" class="attack-select">
-            <option value="dos">CPU Armageddon — /heavy flood + burst trigger</option>
-            <option value="bandwidth">Bandwidth Overcharge — multi-vector realism</option>
-            <option value="headeroverflow">Header Overflow — null/CRLF/size attacks</option>
-            <option value="ghostflood">Ghost Flood — 50-IP distributed simulation</option>
+            <option value="dos" data-i18n="dash.attack.dos">CPU Armageddon — /heavy flood + burst trigger</option>
+            <option value="bandwidth" data-i18n="dash.attack.bandwidth">Bandwidth Overcharge — multi-vector realism</option>
+            <option value="headeroverflow" data-i18n="dash.attack.headerOverflow">Header Overflow — null/CRLF/size attacks</option>
+            <option value="ghostflood" data-i18n="dash.attack.ghostFlood">Ghost Flood — 50-IP distributed simulation</option>
           </select>
         </div>
         <div class="ctrl-actions">
           <button class="btn btn-danger" id="btn-launch-attack">
-            <span class="btn-icon">⚡</span> Launch
+            <span class="btn-icon">⚡</span> <span data-i18n="dash.attack.launch">Launch</span>
           </button>
         </div>
         <div id="attack-status" class="attack-status hidden"></div>
@@ -450,58 +456,59 @@
 
 
       <div class="panel">
-        <div class="section-label" style="margin-bottom:16px">Security Equalizer</div>
+        <div class="section-label" style="margin-bottom:16px" data-i18n="dash.equalizer.title">Security Equalizer</div>
         <div class="ctrl-row" style="justify-content:center;padding:18px 0">
           <button class="btn btn-icon-cog" id="btn-open-equalizer"
                   title="Open configuration editor in new tab"
-                  aria-label="Open Security Equalizer">
+                  aria-label="Open Security Equalizer"
+                  data-i18n-title="dash.equalizer.configureTitle" data-i18n-aria-label="dash.header.openEqualizer">
             <span class="cog-icon" aria-hidden="true">⚙</span>
-            <span>Configure</span>
+            <span data-i18n="dash.equalizer.configure">Configure</span>
           </button>
         </div>
         <div style="font-size:10px;color:var(--text-3);text-align:center;line-height:1.4">
-          Edit thresholds, durations, and defense parameters.<br>
-          Changes apply without restart.
+          <span data-i18n="dash.equalizer.help1">Edit thresholds, durations, and defense parameters.</span><br>
+          <span data-i18n="dash.equalizer.help2">Changes apply without restart.</span>
         </div>
       </div>
 
 
       <div class="panel">
-        <div class="section-label" style="margin-bottom:16px">Keyboard Shortcuts</div>
+        <div class="section-label" style="margin-bottom:16px" data-i18n="dash.kbd.title">Keyboard Shortcuts</div>
         <div class="kbd-panel">
           <div class="kbd-group-label">Spotlight</div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>⌘K</kbd> <kbd>Ctrl+K</kbd></span><span class="kbd-desc">Toggle Spotlight</span></div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>/</kbd></span><span class="kbd-desc">Open Spotlight</span></div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>↑</kbd> <kbd>↓</kbd></span><span class="kbd-desc">Navigate results</span></div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>↵</kbd></span><span class="kbd-desc">Select result</span></div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>esc</kbd></span><span class="kbd-desc">Close Spotlight / overlays</span></div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>⌘K</kbd> <kbd>Ctrl+K</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.toggleSpotlight">Toggle Spotlight</span></div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>/</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.openSpotlight">Open Spotlight</span></div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>↑</kbd> <kbd>↓</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.navigate">Navigate results</span></div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>↵</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.select">Select result</span></div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>esc</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.close">Close Spotlight / overlays</span></div>
 
-          <div class="kbd-group-label">Layout</div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>Shift+J</kbd></span><span class="kbd-desc">Collapse all panels</span></div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>Shift+K</kbd></span><span class="kbd-desc">Isolate the log feed</span></div>
-          <div class="kbd-row"><span class="kbd-keys"><kbd>Shift+L</kbd></span><span class="kbd-desc">Expand all panels</span></div>
+          <div class="kbd-group-label" data-i18n="dash.kbd.layout">Layout</div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>Shift+J</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.collapseAll">Collapse all panels</span></div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>Shift+K</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.isolateFeed">Isolate the log feed</span></div>
+          <div class="kbd-row"><span class="kbd-keys"><kbd>Shift+L</kbd></span><span class="kbd-desc" data-i18n="dash.kbd.expandAll">Expand all panels</span></div>
         </div>
       </div>
 
     </div>
 
 
-    <div class="section-label" id="section-feed">Live Intelligence Feed</div>
+    <div class="section-label" id="section-feed" data-i18n="dash.section.feed">Live Intelligence Feed</div>
     <div class="log-panel">
       <div class="log-header">
         <div class="section-label" style="margin-bottom:0;font-size:10px">
-          Request Stream
+          <span data-i18n="dash.feed.stream">Request Stream</span>
         </div>
         <div class="log-controls">
           <button class="autoscroll-btn" id="btn-autoscroll">
-            <span class="autoscroll-dot"></span> Auto ↓: ON
+            <span class="autoscroll-dot"></span> <span data-i18n="dash.feed.autoScrollOn">Auto ↓: ON</span>
           </button>
           <button class="btn btn-sm" id="btn-export-logs">
-            <span class="btn-icon">⬇</span> Export CSV
+            <span class="btn-icon">⬇</span> <span data-i18n="dash.feed.exportCsv">Export CSV</span>
           </button>
-          <button class="btn btn-danger btn-sm" id="btn-reset-guard">Reset All State</button>
+          <button class="btn btn-danger btn-sm" id="btn-reset-guard" data-i18n="dash.feed.resetAll">Reset All State</button>
           <a href="/admin/report" target="_blank" rel="noreferrer">
-            <button class="btn btn-sm">Report</button>
+            <button class="btn btn-sm" data-i18n="dash.feed.report">Report</button>
           </a>
         </div>
       </div>
@@ -521,7 +528,9 @@
     var c = document.getElementById('live-clock');
     var d = document.getElementById('live-date');
     if (c) c.textContent = n.toTimeString().slice(0, 8);
-    if (d) {
+    if (d && I18N.lang === 'ja') {
+      d.textContent = n.toLocaleDateString(I18N.locale(), { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' });
+    } else if (d) {
       var parts = n.toDateString().split(' ');
       d.textContent = parts[0] + ', ' + parts[1] + ' ' + parts[2] + ', ' + parts[3];
     }
@@ -561,41 +570,42 @@
   <div class="explain-header">
     <div class="explain-ip-block">
       <span class="explain-ip mono" id="explain-ip">—</span>
-      <span class="explain-geo" id="explain-geo">geo: —</span>
+      <span class="explain-geo" id="explain-geo" data-i18n="dash.explain.geoUnknown">geo: —</span>
     </div>
     <div class="explain-actions">
-      <button class="btn btn-danger btn-sm" data-explain-action="block-1h" title="Block this IP for 1 hour">Block 1h</button>
-      <button class="btn btn-danger btn-sm" data-explain-action="block-24h" title="Block this IP for 24 hours">Block 24h</button>
-      <button class="btn btn-danger btn-sm" data-explain-action="block-perm" title="Block permanently">Permanent</button>
-      <button class="btn btn-sm" data-explain-action="unblock" title="Remove from blocklist">Unblock</button>
-      <button class="btn btn-green btn-sm" data-explain-action="allowlist" title="Add to allowlist">Allowlist</button>
-      <button class="btn btn-sm" data-explain-action="copy" title="Copy IP">Copy</button>
-      <button class="btn btn-sm btn-icon-only" data-explain-action="close" aria-label="Close">✕</button>
+      <button class="btn btn-danger btn-sm" data-explain-action="block-1h" title="Block this IP for 1 hour" data-i18n="dash.explain.block1h" data-i18n-title="dash.explain.block1hTitle">Block 1h</button>
+      <button class="btn btn-danger btn-sm" data-explain-action="block-24h" title="Block this IP for 24 hours" data-i18n="dash.explain.block24h" data-i18n-title="dash.explain.block24hTitle">Block 24h</button>
+      <button class="btn btn-danger btn-sm" data-explain-action="block-perm" title="Block permanently" data-i18n="dash.explain.permanent" data-i18n-title="dash.explain.permanentTitle">Permanent</button>
+      <button class="btn btn-sm" data-explain-action="unblock" title="Remove from blocklist" data-i18n="dash.ip.unblock" data-i18n-title="dash.explain.unblockTitle">Unblock</button>
+      <button class="btn btn-green btn-sm" data-explain-action="allowlist" title="Add to allowlist" data-i18n="dash.explain.allowlist" data-i18n-title="dash.explain.allowlistTitle">Allowlist</button>
+      <button class="btn btn-sm" data-explain-action="copy" title="Copy IP" data-i18n="dash.explain.copy" data-i18n-title="dash.explain.copyTitle">Copy</button>
+      <button class="btn btn-sm btn-icon-only" data-explain-action="close" aria-label="Close" data-i18n-aria-label="dash.explain.close">✕</button>
     </div>
   </div>
   <div class="explain-status" id="explain-status">—</div>
-  <div class="explain-section-label">Summary</div>
+  <div class="explain-section-label" data-i18n="dash.explain.summary">Summary</div>
   <div class="explain-summary" id="explain-summary">—</div>
-  <div class="explain-section-label">Timeline</div>
+  <div class="explain-section-label" data-i18n="dash.explain.timeline">Timeline</div>
   <div class="explain-timeline" id="explain-timeline">—</div>
-  <div class="explain-section-label">Raw Requests</div>
+  <div class="explain-section-label" data-i18n="dash.explain.raw">Raw Requests</div>
   <div class="explain-raw" id="explain-raw">—</div>
 </aside>
 <div id="explain-backdrop" class="explain-backdrop hidden" aria-hidden="true"></div>
 
 
-<div id="spotlight" class="spotlight hidden" role="dialog" aria-label="Spotlight search" aria-hidden="true">
+<div id="spotlight" class="spotlight hidden" role="dialog" aria-label="Spotlight search" data-i18n-aria-label="dash.spotlight.aria" aria-hidden="true">
   <div class="spotlight-backdrop"></div>
   <div class="spotlight-card" role="combobox" aria-expanded="true" aria-haspopup="listbox" aria-owns="spotlight-results">
     <input id="spotlight-input" class="spotlight-input" type="text"
            placeholder="Search IPs, URLs, events, actions, config…"
+           data-i18n-placeholder="dash.spotlight.placeholder"
            autocomplete="off" spellcheck="false" autocapitalize="off"
            aria-autocomplete="list" aria-controls="spotlight-results">
     <div id="spotlight-results" class="spotlight-results" role="listbox"></div>
     <div class="spotlight-footer">
-      <span><kbd>↑↓</kbd> navigate</span>
-      <span><kbd>↵</kbd> select</span>
-      <span><kbd>esc</kbd> close</span>
+      <span><kbd>↑↓</kbd> <span data-i18n="dash.spotlight.navigate">navigate</span></span>
+      <span><kbd>↵</kbd> <span data-i18n="dash.spotlight.select">select</span></span>
+      <span><kbd>esc</kbd> <span data-i18n="dash.spotlight.close">close</span></span>
       <span id="spotlight-mode-hint"></span>
     </div>
   </div>

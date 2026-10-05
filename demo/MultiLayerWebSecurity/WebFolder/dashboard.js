@@ -92,10 +92,10 @@ function setClass(el, cls) {
 
 function fmtUptime(seconds) {
     const s = Math.floor(seconds);
-    if (s >= 86400) return `${Math.floor(s/86400)}d ${Math.floor((s%86400)/3600)}h`;
-    if (s >= 3600)  return `${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m`;
-    if (s >= 60)    return `${Math.floor(s/60)}m ${s%60}s`;
-    return `${s}s`;
+    if (s >= 86400) return t('dash.uptime.days', { d: Math.floor(s/86400), h: Math.floor((s%86400)/3600) });
+    if (s >= 3600)  return t('dash.uptime.hours', { h: Math.floor(s/3600), m: Math.floor((s%3600)/60) });
+    if (s >= 60)    return t('dash.uptime.minutes', { m: Math.floor(s/60), s: s%60 });
+    return t('dash.unit.sec', { n: s });
 }
 
 function fmtTs(ts) {
@@ -104,7 +104,7 @@ function fmtTs(ts) {
 }
 
 function numFmt(n) {
-    return typeof n === 'number' ? n.toLocaleString() : (n ?? '—');
+    return typeof n === 'number' ? n.toLocaleString(I18N.locale()) : (n ?? '—');
 }
 
 
@@ -228,12 +228,12 @@ async function doLogin() {
     if (btn) btn.disabled = false;
 
     if (result === AUTH_REQUIRED || (result && result.success === false)) {
-        showLogin('Authentication failed. Check your passphrase.');
+        showLogin(t('dash.login.failed'));
         return;
     }
 
     if (!result || result.success !== true) {
-        showLogin('Authentication error. Try again.');
+        showLogin(t('dash.login.error'));
         return;
     }
 
@@ -266,7 +266,7 @@ function clearDpgDisplay() {
     const codeEl = $('dpg-code');
     if (codeEl) codeEl.textContent = '—';
     const ttlEl = $('dpg-ttl');
-    if (ttlEl) ttlEl.textContent = 'expires in 5:00';
+    if (ttlEl) ttlEl.textContent = t('dash.login.expiresIn', { time: '5:00' });
     const cb = $('dpg-set-default');
     if (cb) cb.checked = false;
 }
@@ -280,19 +280,19 @@ async function handleGeneratePassphrase() {
             showAlertToast({
                 id: -Date.now(),
                 severity: 'CRITICAL',
-                title: 'Generate failed',
-                message: 'Could not reach the server. Try again in a moment.',
+                title: t('dash.login.generateFailed'),
+                message: t('dash.login.generateFailedMsg'),
             });
             return;
         }
         if (r.success === false) {
             const msg = r.retryAfterSec
-                ? `Too many generations — wait ${r.retryAfterSec}s.`
-                : (r.message || 'Generation refused.');
+                ? t('dash.login.tooMany', { n: r.retryAfterSec })
+                : (r.message || t('dash.login.refusedMsg'));
             showAlertToast({
                 id: -Date.now(),
                 severity: 'WARNING',
-                title: 'Generate refused',
+                title: t('dash.login.generateRefused'),
                 message: msg,
             });
             return;
@@ -320,7 +320,7 @@ function renderDpgTtl() {
     if (!ttlEl) return;
     const remainingMs = state.dpg.expiresAt - Date.now();
     if (remainingMs <= 0) {
-        ttlEl.textContent = 'expired';
+        ttlEl.textContent = t('dash.login.expired');
         ttlEl.classList.add('expired');
         clearDpgDisplay();
         return;
@@ -328,7 +328,7 @@ function renderDpgTtl() {
     const sec = Math.floor(remainingMs / 1000);
     const m   = Math.floor(sec / 60);
     const s   = sec % 60;
-    ttlEl.textContent = `expires in ${m}:${String(s).padStart(2, '0')}`;
+    ttlEl.textContent = t('dash.login.expiresIn', { time: `${m}:${String(s).padStart(2, '0')}` });
 }
 
 async function handleCopyPassphrase() {
@@ -345,8 +345,8 @@ async function handleCopyPassphrase() {
         showAlertToast({
             id: -Date.now(),
             severity: 'WARNING',
-            title: 'Copy failed',
-            message: 'Clipboard access denied. Code is still visible above.',
+            title: t('dash.toast.copyFailed'),
+            message: t('dash.login.copyFailedMsg'),
         });
     }
 }
@@ -396,13 +396,13 @@ function updatePanicBanner(panicState, opts = {}) {
     if (active) {
         banner.classList.remove('hidden');
         if (cpuActive && !panicState.active) {
-            $('panic-label').textContent  = 'CPU PANIC ACTIVE';
-            $('panic-reason').textContent = 'CPU saturation — rejecting non-allowlisted traffic';
-            $('panic-timer').textContent  = panicState.cpuPanicSecondsRemaining + 's';
+            $('panic-label').textContent  = t('dash.panic.cpuActive');
+            $('panic-reason').textContent = t('dash.panic.cpuReason');
+            $('panic-timer').textContent  = t('dash.unit.sec', { n: panicState.cpuPanicSecondsRemaining });
         } else {
-            $('panic-label').textContent  = 'PANIC MODE ACTIVE';
+            $('panic-label').textContent  = t('dash.panic.modeActive');
             $('panic-reason').textContent = panicState.reason || '';
-            $('panic-timer').textContent  = panicState.secondsRemaining + 's';
+            $('panic-timer').textContent  = t('dash.unit.sec', { n: panicState.secondsRemaining });
         }
     } else {
         banner.classList.add('hidden');
@@ -412,13 +412,13 @@ function updatePanicBanner(panicState, opts = {}) {
 function updateThreatBadge(d, opts = {}) {
     const badge = $('threat-badge');
     if (!badge) return;
-    let level = 'NORMAL', cls = 'threat-normal';
+    let level = t('dash.threat.normal'), cls = 'threat-normal';
     if (d.panicState && (d.panicState.active || d.panicState.cpuPanicActive)) {
-        level = 'PANIC'; cls = 'threat-critical';
+        level = t('dash.threat.panic'); cls = 'threat-critical';
     } else if (d.alertSummary && d.alertSummary.critical > 0) {
-        level = 'CRITICAL'; cls = 'threat-critical';
+        level = t('dash.threat.critical'); cls = 'threat-critical';
     } else if (d.alertSummary && d.alertSummary.warning > 0) {
-        level = 'ELEVATED'; cls = 'threat-elevated';
+        level = t('dash.threat.elevated'); cls = 'threat-elevated';
     }
     badge.textContent = level;
     setClass(badge, cls);
@@ -444,10 +444,10 @@ function updateDefenseStats(d) {
     if (bp) {
         const cap    = Number(bp.rateCap)    || 0;
         const winSec = Number(bp.windowSec)  || 60;
-        setText('stat-rate-cap',   `${numFmt(cap)} / ${winSec}s`);
-        setText('stat-window',     `${winSec}s`);
+        setText('stat-rate-cap',   t('dash.unit.rateCap', { cap: numFmt(cap), sec: winSec }));
+        setText('stat-window',     t('dash.unit.sec', { n: winSec }));
         setText('stat-strike-cap', `${Number(bp.strikeCap) || 0}`);
-        setText('stat-block-ttl',  `${Number(bp.blockTTL)  || 0}s`);
+        setText('stat-block-ttl',  t('dash.unit.sec', { n: Number(bp.blockTTL)  || 0 }));
     }
 
     const rl = d.rlPolicy;
@@ -456,9 +456,9 @@ function updateDefenseStats(d) {
         const burstWindow  = Number(rl.burstWindowSec)  || 0;
         const sustained    = Number(rl.sustainedRate)   || 0;
         const cpuPanic     = Number(rl.cpuPanicTrigger) || 0;
-        setText('stat-burst-size',   `${burstSize} req`);
-        setText('stat-burst-window', `${burstWindow}s`);
-        setText('stat-sustained',    `${sustained.toFixed(1)} req/s`);
+        setText('stat-burst-size',   t('dash.unit.req', { n: burstSize }));
+        setText('stat-burst-window', t('dash.unit.sec', { n: burstWindow }));
+        setText('stat-sustained',    t('dash.unit.reqPerSec', { n: sustained.toFixed(1) }));
         setText('stat-cpu-panic',    `${cpuPanic}%`);
     }
 }
@@ -486,7 +486,7 @@ function updateRate(d) {
     const rate = typeof d.currentRate === 'number' ? d.currentRate : 0;
     state.rateHistory.push(rate);
     if (state.rateHistory.length > GRAPH_SAMPLES) state.rateHistory.shift();
-    setText('rate-val', numFmt(rate) + ' req/min');
+    setText('rate-val', t('dash.unit.reqPerMin', { n: numFmt(rate) }));
     drawGraph('rate-canvas', state.rateHistory, null,
         'rgba(46,160,67,0.9)', 'rgba(46,160,67,0.15)');
 }
@@ -500,7 +500,7 @@ function updateToggles(d, opts = {}) {
     const masterBtn = $('tog-master');
     if (masterBtn) {
         masterBtn.dataset.state = masterOn ? 'true' : 'false';
-        masterBtn.textContent   = masterOn ? 'ENGAGED' : 'DISENGAGED';
+        masterBtn.textContent   = masterOn ? t('dash.toggle.engaged') : t('dash.toggle.disengaged');
         masterBtn.disabled      = false;
         masterBtn.removeAttribute('aria-disabled');
         masterBtn.title         = '';
@@ -518,17 +518,17 @@ function updateToggles(d, opts = {}) {
         if (masterOn) {
             const on = Boolean(val);
             btn.dataset.state = on ? 'true' : 'false';
-            btn.textContent   = on ? 'ENGAGED' : 'DISENGAGED';
+            btn.textContent   = on ? t('dash.toggle.engaged') : t('dash.toggle.disengaged');
             btn.disabled      = false;
             btn.removeAttribute('aria-disabled');
             btn.title         = '';
         } else {
 
             btn.dataset.state = 'false';
-            btn.textContent   = 'DISENGAGED';
+            btn.textContent   = t('dash.toggle.disengaged');
             btn.disabled      = true;
             btn.setAttribute('aria-disabled', 'true');
-            btn.title         = 'Master Switch is OFF — re-engage the Master Switch first to manage individual defense layers.';
+            btn.title         = t('dash.master.layerLocked');
         }
     }
 
@@ -540,12 +540,12 @@ function updateToggles(d, opts = {}) {
             masterCard.style.borderColor = '';
             masterCard.style.boxShadow   = '';
             masterLine.style.color       = 'var(--text-secondary)';
-            masterLine.textContent       = 'All defenses active — including Panic Mode fail-safe. Per-layer toggles below operate normally.';
+            masterLine.textContent       = t('dash.master.statusOn');
         } else {
             masterCard.style.borderColor = 'var(--red, #ff3b30)';
             masterCard.style.boxShadow   = '0 0 0 1px rgba(255,59,48,0.35), 0 0 18px rgba(255,59,48,0.2)';
             masterLine.style.color       = 'var(--red, #ff3b30)';
-            masterLine.textContent       = 'Master OFF — every defense bypassed, INCLUDING Panic Mode. Panic indicator on dashboard may show active (workers still monitor) but no blocks are applied.';
+            masterLine.textContent       = t('dash.master.statusOff');
         }
     }
 }
@@ -570,7 +570,7 @@ function updateBlocklist(blocklist, count, opts = {}) {
     const body = $('blocklist-body');
     if (!body || !blocklist) return;
     body.innerHTML = '';
-    if (blocklist.length === 0) { body.textContent = 'No blocked IPs.'; return; }
+    if (blocklist.length === 0) { body.textContent = t('dash.ip.empty'); return; }
     blocklist.slice(0, 50).forEach(entry => {
         const row    = document.createElement('div');
         row.className = 'bl-row';
@@ -599,14 +599,14 @@ async function loadAlerts() {
     const list = $('alerts-list');
     if (!list) return;
     if (!data) {
-        list.textContent = 'Alerts temporarily unavailable.';
+        list.textContent = t('dash.alerts.unavailable');
         return;
     }
     const recent = Array.isArray(data.recentAlerts) ? data.recentAlerts : [];
     lastAlerts = recent;
     list.innerHTML = '';
     const alerts = [...recent].reverse().slice(0, 30);
-    if (alerts.length === 0) { list.textContent = 'No alerts.'; return; }
+    if (alerts.length === 0) { list.textContent = t('dash.alerts.empty'); return; }
     alerts.forEach(a => {
         const row   = document.createElement('div');
         row.className = `alert-row ${(a.severity||'').toLowerCase()}${a.acknowledged?' acked':''}`;
@@ -620,7 +620,7 @@ async function loadAlerts() {
         msg.textContent = a.message || '';
         const meta  = document.createElement('div');
         meta.className   = 'alert-meta';
-        meta.textContent = fmtTs(a.timestamp) + (a.acknowledged ? ' — acked' : '');
+        meta.textContent = fmtTs(a.timestamp) + (a.acknowledged ? t('dash.alerts.ackedSuffix') : '');
         row.append(title, msg, meta);
         row.addEventListener('click', () => ackAlert(a.id));
         list.appendChild(row);
@@ -662,7 +662,7 @@ function showAlertToast(alert) {
 
     const hint = document.createElement('div');
     hint.className = 'at-hint';
-    hint.textContent = sev === 'critical' ? 'Click to acknowledge' : 'Auto-dismiss in 5s · click to ack';
+    hint.textContent = sev === 'critical' ? t('dash.alerts.hintCritical') : t('dash.alerts.hintAuto');
 
     toast.append(title, msg, hint);
 
@@ -704,10 +704,10 @@ async function refreshWorkers() {
         name.textContent = w.name;
         const beats = document.createElement('span');
         beats.className   = 'worker-beats';
-        beats.textContent = `${w.beatCount} beats`;
+        beats.textContent = t('dash.workers.beats', { n: w.beatCount });
         const ago   = document.createElement('span');
         ago.className   = 'worker-ago';
-        ago.textContent = `${w.lastBeatAgoSec}s ago`;
+        ago.textContent = t('dash.workers.ago', { n: w.lastBeatAgoSec });
         row.append(dot, name, beats, ago);
         list.appendChild(row);
     });
@@ -723,7 +723,7 @@ async function loadHoneypotHits() {
     if (badge && data.stats) badge.textContent = data.stats.totalHits ?? 0;
     const list = $('honeypot-list');
     if (!list || !data.hits) return;
-    if (data.hits.length === 0) { list.textContent = 'No hits recorded.'; return; }
+    if (data.hits.length === 0) { list.textContent = t('dash.honeypot.empty'); return; }
     list.innerHTML = '';
     [...data.hits].reverse().forEach(h => {
         const row = document.createElement('div');
@@ -953,8 +953,8 @@ async function handleToggle(layer) {
             showAlertToast({
                 id: -Date.now(),
                 severity: 'WARNING',
-                title: 'Master Switch is OFF',
-                message: 'Re-engage the Master Switch to manage individual defense layers.',
+                title: t('dash.toast.masterOff'),
+                message: t('dash.toast.masterOffMsg'),
             });
             return;
         }
@@ -968,25 +968,14 @@ async function handleToggle(layer) {
 
 
     if (layer === 'master' && next === false) {
-        const ok = confirm(
-            'DISENGAGE Global Defense Master?\n\n' +
-            'Every defense layer will be bypassed:\n' +
-            '  • CPU panic + general panic mode\n' +
-            '  • Header validation, IP blocklist/allowlist\n' +
-            '  • Honeypot, WAF, per-IP & global rate limits\n' +
-            '  • Sonar IDS scoring + sniper/drone queues\n\n' +
-            'State is preserved (blocklist, allowlist, alerts, sessions, telemetry, ' +
-            'honeypot lists). The system will process UNMITIGATED traffic until you ' +
-            're-engage the master.\n\n' +
-            'Continue?'
-        );
+        const ok = confirm(t('dash.master.confirmOff'));
         if (!ok) return;
     }
 
     const r = await api(url + `?enabled=${next}`, 'POST');
     if (checkAuth(r)) return;
     btn.dataset.state = next ? 'true' : 'false';
-    btn.textContent   = next ? 'ENGAGED' : 'DISENGAGED';
+    btn.textContent   = next ? t('dash.toggle.engaged') : t('dash.toggle.disengaged');
 
 
     if (layer === 'master') {
@@ -1045,13 +1034,13 @@ async function handleLaunchAttack() {
     const url     = ATTACK_URLS[vector];
     if (!url) return;
     const statusEl = $('attack-status');
-    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.textContent = `Launching ${vector}…`; }
+    if (statusEl) { statusEl.classList.remove('hidden'); statusEl.textContent = t('dash.attack.launching', { vector }); }
     const data = await api(url, 'POST', {});
     if (checkAuth(data)) return;
     if (statusEl) {
         statusEl.textContent = data
-            ? `✓ ${data.message || 'Attack launched'}`
-            : '✗ Launch failed — check system log';
+            ? `✓ ${data.message || t('dash.attack.launched')}`
+            : t('dash.attack.failed');
         setTimeout(() => statusEl.classList.add('hidden'), 5000);
     }
 }
@@ -1071,7 +1060,7 @@ async function handleClearAlerts() {
 function handleExportLogs() { window.open(API.exportLogs, '_blank', 'noreferrer'); }
 
 async function handleResetGuard() {
-    if (!confirm('Reset ALL protection state? This clears stats, blocklist, logs, alerts, and honeypot hits.')) return;
+    if (!confirm(t('dash.feed.confirmReset'))) return;
     const r = await api(API.resetGuard, 'POST', {});
     if (checkAuth(r)) return;
     state.logLines = []; state.cpuHistory = []; state.rateHistory = [];
@@ -1079,13 +1068,7 @@ async function handleResetGuard() {
 }
 
 async function handleClearIPLists() {
-    const ok = confirm(
-        'Clear ALL IP lists?\n\n' +
-        'This resets blocklist, allowlist, and strikes inside Data/ip_lists.json ' +
-        '(the file and its top-level structure are preserved).\n\n' +
-        'Note: clearing the allowlist removes any localhost protection entry ' +
-        '(e.g. 127.0.0.1) — re-add it manually if needed after the test run.'
-    );
+    const ok = confirm(t('dash.ip.confirmClear'));
     if (!ok) return;
     const btn = $('btn-clear-iplists');
     if (btn) btn.disabled = true;
@@ -1096,8 +1079,8 @@ async function handleClearIPLists() {
             showAlertToast({
                 id: -Date.now(),
                 severity: 'CRITICAL',
-                title: 'Clear All failed',
-                message: 'Backend did not respond. Check server logs.',
+                title: t('dash.ip.clearFailed'),
+                message: t('dash.ip.clearNoResponse'),
             });
             return;
         }
@@ -1105,8 +1088,8 @@ async function handleClearIPLists() {
             showAlertToast({
                 id: -Date.now(),
                 severity: 'CRITICAL',
-                title: 'Clear All failed',
-                message: r.message || 'Disk save failed — ip_lists.json may still hold stale data.',
+                title: t('dash.ip.clearFailed'),
+                message: r.message || t('dash.ip.clearDiskFailed'),
             });
             return;
         }
@@ -1119,7 +1102,7 @@ async function handleClearIPLists() {
 function handleAutoScroll() {
     state.autoScroll = !state.autoScroll;
     const btn = $('btn-autoscroll');
-    if (btn) btn.textContent = `AUTO ↓: ${state.autoScroll ? 'ON' : 'OFF'}`;
+    if (btn) btn.textContent = t('dash.feed.autoScroll', { state: state.autoScroll ? t('dash.feed.on') : t('dash.feed.off') });
 }
 
 
@@ -1162,9 +1145,9 @@ function openExplainPanel(rawIP) {
 
 
     setText('explain-ip', ip);
-    setText('explain-geo', ip.startsWith('anon:') ? 'header-derived anon client' : 'geo: —');
+    setText('explain-geo', ip.startsWith('anon:') ? t('dash.explain.anon') : t('dash.explain.geoUnknown'));
     const statusEl = $('explain-status');
-    if (statusEl) statusEl.textContent = 'Loading…';
+    if (statusEl) statusEl.textContent = t('dash.explain.loading');
     const sumEl = $('explain-summary');
     if (sumEl) sumEl.textContent = '—';
     const tlEl = $('explain-timeline');
@@ -1206,14 +1189,14 @@ async function loadExplainData(ip) {
     } catch (e) {
         if (e && e.name === 'AbortError') return;
         const statusEl = $('explain-status');
-        if (statusEl) statusEl.textContent = 'Failed to load — check connection.';
+        if (statusEl) statusEl.textContent = t('dash.explain.loadFailed');
         return;
     }
     if (state.explain.ip !== ip) return;
     if (checkAuth(data)) return;
     if (data === null) {
         const statusEl = $('explain-status');
-        if (statusEl) statusEl.textContent = 'Backend did not respond.';
+        if (statusEl) statusEl.textContent = t('dash.explain.noResponse');
         return;
     }
     renderExplainHeader(data);
@@ -1226,7 +1209,7 @@ async function loadExplainData(ip) {
 function renderExplainHeader(data) {
     setText('explain-ip', data.ip || '—');
     const isAnon = String(data.ip || '').startsWith('anon:');
-    setText('explain-geo', isAnon ? 'header-derived anon client' : 'geo: —');
+    setText('explain-geo', isAnon ? t('dash.explain.anon') : t('dash.explain.geoUnknown'));
 
 
     const s = data.status || {};
@@ -1248,24 +1231,24 @@ function renderExplainStatus(data) {
     if (!el) return;
     const s = data.status || {};
     if (s.allowlisted) {
-        el.textContent = `Allowlisted — exempt from all blocks.`;
+        el.textContent = t('dash.explain.statusAllowlisted');
         return;
     }
     if (s.blocked) {
         if (s.permanent) {
-            el.textContent = `BLOCKED — permanent (${s.strikes}/${s.permanentThreshold} strikes).`;
+            el.textContent = t('dash.explain.statusPermanent', { strikes: s.strikes, threshold: s.permanentThreshold });
         } else {
             const rem = Number(s.expirySec || 0);
             const mins = Math.floor(rem / 60);
             const secs = rem % 60;
-            el.textContent = `BLOCKED — ${mins}m${secs}s remaining (${s.strikes}/${s.permanentThreshold} strikes).`;
+            el.textContent = t('dash.explain.statusBlocked', { m: mins, s: secs, strikes: s.strikes, threshold: s.permanentThreshold });
         }
         return;
     }
     if ((s.strikes || 0) > 0) {
-        el.textContent = `Clean — ${s.strikes}/${s.permanentThreshold} strike(s) on record.`;
+        el.textContent = t('dash.explain.statusStrikes', { strikes: s.strikes, threshold: s.permanentThreshold });
     } else {
-        el.textContent = 'Clean — no strikes, not blocked.';
+        el.textContent = t('dash.explain.statusClean');
     }
 }
 
@@ -1277,14 +1260,14 @@ function renderExplainSummary(data) {
     if (!sum.totalRequests) {
         const empty = document.createElement('div');
         empty.className = 'explain-empty';
-        empty.textContent = 'No requests recorded in current ring buffer.';
+        empty.textContent = t('dash.explain.noRequests');
         el.appendChild(empty);
         return;
     }
 
     const totals = document.createElement('div');
     totals.className = 'summary-row';
-    totals.innerHTML = `<span>Requests</span><strong>${sum.totalRequests}</strong>`;
+    totals.innerHTML = `<span>${t('dash.explain.requests')}</span><strong>${sum.totalRequests}</strong>`;
     el.appendChild(totals);
 
     const verbWrap = document.createElement('div');
@@ -1299,13 +1282,13 @@ function renderExplainSummary(data) {
     if (sum.firstSeen) {
         const fs = document.createElement('div');
         fs.className = 'summary-row';
-        fs.innerHTML = `<span>First seen</span><strong>${escapeHTML(fmtTs(sum.firstSeen))}</strong>`;
+        fs.innerHTML = `<span>${t('dash.explain.firstSeen')}</span><strong>${escapeHTML(fmtTs(sum.firstSeen))}</strong>`;
         el.appendChild(fs);
     }
     if (sum.lastSeen) {
         const ls = document.createElement('div');
         ls.className = 'summary-row';
-        ls.innerHTML = `<span>Last seen</span><strong>${escapeHTML(fmtTs(sum.lastSeen))}</strong>`;
+        ls.innerHTML = `<span>${t('dash.explain.lastSeen')}</span><strong>${escapeHTML(fmtTs(sum.lastSeen))}</strong>`;
         el.appendChild(ls);
     }
     if (sum.topUserAgent) {
@@ -1337,7 +1320,7 @@ function renderExplainTimeline(data) {
     if (tl.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'explain-empty';
-        empty.textContent = 'No activity recorded.';
+        empty.textContent = t('dash.explain.noActivity');
         el.appendChild(empty);
         return;
     }
@@ -1381,7 +1364,7 @@ function renderExplainRaw(data) {
     if (raws.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'explain-empty';
-        empty.textContent = 'No raw bodies captured for this IP.';
+        empty.textContent = t('dash.explain.noRaw');
         el.appendChild(empty);
         return;
     }
@@ -1398,7 +1381,7 @@ function renderExplainRaw(data) {
         if (r.bodyTruncated) {
             const trunc = document.createElement('div');
             trunc.className = 'raw-truncated';
-            trunc.textContent = '(truncated at 2 KB)';
+            trunc.textContent = t('dash.explain.truncated');
             entry.appendChild(trunc);
         }
         el.appendChild(entry);
@@ -1416,9 +1399,9 @@ async function handleExplainAction(action, ip) {
     if (action === 'copy') {
         try {
             await navigator.clipboard.writeText(ip);
-            showToast('IP copied', 'INFO');
+            showToast(t('dash.toast.ipCopied'), 'INFO');
         } catch (_) {
-            showToast('Copy failed', 'WARNING');
+            showToast(t('dash.toast.copyFailed'), 'WARNING');
         }
         return;
     }
@@ -1430,36 +1413,36 @@ async function handleExplainAction(action, ip) {
         switch (action) {
             case 'block-1h':
                 result = await api(API.block, 'POST', { ip, duration: 3600, reason: 'Manual: Block 1h via Explain' });
-                label = 'Blocked 1h';
+                label = t('dash.explain.labelBlocked1h');
                 break;
             case 'block-24h':
                 result = await api(API.block, 'POST', { ip, duration: 86400, reason: 'Manual: Block 24h via Explain' });
-                label = 'Blocked 24h';
+                label = t('dash.explain.labelBlocked24h');
                 break;
             case 'block-perm':
 
 
                 result = await api(API.block, 'POST', { ip, duration: 31536000, reason: 'Manual: Permanent block via Explain' });
-                label = 'Blocked (permanent)';
+                label = t('dash.explain.labelBlockedPerm');
                 break;
             case 'unblock':
                 result = await api(API.unblock, 'POST', { ip });
-                label = 'Unblocked';
+                label = t('dash.explain.labelUnblocked');
                 break;
             case 'allowlist':
                 result = await api(API.allow, 'POST', { ip, reason: 'Manual allowlist via Explain' });
-                label = 'Allowlisted';
+                label = t('dash.explain.labelAllowlisted');
                 break;
             default:
                 return;
         }
         if (checkAuth(result)) return;
         if (result === null) {
-            showToast(`${label} — backend did not respond`, 'CRITICAL');
+            showToast(t('dash.explain.actionNoResponse', { label }), 'CRITICAL');
             return;
         }
         if (result.success === false) {
-            showToast(`${label} failed: ${result.message || ''}`, 'WARNING');
+            showToast(t('dash.explain.actionFailed', { label, message: result.message || '' }), 'WARNING');
             return;
         }
         showToast(label, 'INFO');
@@ -1473,32 +1456,51 @@ async function handleExplainAction(action, ip) {
 
 
 const SPOTLIGHT_PAGE_ANCHORS = [
-    { title: 'Traffic Telemetry',        anchor: 'section-telemetry' },
-    { title: 'Global Defense Master',    anchor: 'section-defense-master' },
-    { title: 'Defense Layers',           anchor: 'section-defense-layers' },
-    { title: 'Intelligence',             anchor: 'section-intelligence' },
-    { title: 'Operations',               anchor: 'section-operations' },
-    { title: 'Controls',                 anchor: 'section-controls' },
-    { title: 'Live Intelligence Feed',   anchor: 'section-feed' },
+    { title: t('dash.section.telemetry'),      anchor: 'section-telemetry' },
+    { title: t('dash.section.defenseMaster'),  anchor: 'section-defense-master' },
+    { title: t('dash.section.defenseLayers'),  anchor: 'section-defense-layers' },
+    { title: t('dash.section.intelligence'),   anchor: 'section-intelligence' },
+    { title: t('dash.section.operations'),     anchor: 'section-operations' },
+    { title: t('dash.section.controls'),       anchor: 'section-controls' },
+    { title: t('dash.section.feed'),           anchor: 'section-feed' },
 ];
 
 const SPOTLIGHT_ACTIONS = [
-    { title: 'Block IP…',           run: () => { closeSpotlight(); document.getElementById('ip-input')?.focus(); } },
-    { title: 'Allowlist IP…',       run: () => { closeSpotlight(); document.getElementById('ip-input')?.focus(); } },
-    { title: 'Trigger Panic',       run: () => { closeSpotlight(); document.getElementById('btn-trigger-panic')?.click(); } },
-    { title: 'Lift Panic',          run: () => { closeSpotlight(); document.getElementById('btn-lift-panic-ctrl')?.click(); } },
-    { title: 'Reset All State',     run: () => { closeSpotlight(); document.getElementById('btn-reset-guard')?.click(); } },
-    { title: 'Clear IP Lists',      run: () => { closeSpotlight(); document.getElementById('btn-clear-iplists')?.click(); } },
-    { title: 'Export Logs (CSV)',   run: () => { closeSpotlight(); document.getElementById('btn-export-logs')?.click(); } },
-    { title: 'Open Security Equalizer', run: () => { closeSpotlight(); window.open('/sentinel-config.html', '_blank', 'noopener'); } },
-    { title: 'Ack All Alerts',      run: () => { closeSpotlight(); document.getElementById('btn-ack-all')?.click(); } },
-    { title: 'Clear Alerts',        run: () => { closeSpotlight(); document.getElementById('btn-clear-alerts')?.click(); } },
-    { title: 'Toggle Theme',        run: () => { closeSpotlight(); document.getElementById('btn-theme-toggle')?.click(); } },
-    { title: 'Logout',              run: () => { closeSpotlight(); document.getElementById('btn-logout')?.click(); } },
+    { title: t('dash.spotlight.blockIp'),      run: () => { closeSpotlight(); document.getElementById('ip-input')?.focus(); } },
+    { title: t('dash.spotlight.allowlistIp'),  run: () => { closeSpotlight(); document.getElementById('ip-input')?.focus(); } },
+    { title: t('dash.spotlight.triggerPanic'), run: () => { closeSpotlight(); document.getElementById('btn-trigger-panic')?.click(); } },
+    { title: t('dash.spotlight.liftPanic'),    run: () => { closeSpotlight(); document.getElementById('btn-lift-panic-ctrl')?.click(); } },
+    { title: t('dash.feed.resetAll'),          run: () => { closeSpotlight(); document.getElementById('btn-reset-guard')?.click(); } },
+    { title: t('dash.spotlight.clearIpLists'), run: () => { closeSpotlight(); document.getElementById('btn-clear-iplists')?.click(); } },
+    { title: t('dash.spotlight.exportLogs'),   run: () => { closeSpotlight(); document.getElementById('btn-export-logs')?.click(); } },
+    { title: t('dash.header.openEqualizer'),  run: () => { closeSpotlight(); window.open('/sentinel-config.html', '_blank', 'noopener'); } },
+    { title: t('dash.spotlight.ackAllAlerts'), run: () => { closeSpotlight(); document.getElementById('btn-ack-all')?.click(); } },
+    { title: t('dash.spotlight.clearAlerts'),  run: () => { closeSpotlight(); document.getElementById('btn-clear-alerts')?.click(); } },
+    { title: t('dash.spotlight.toggleTheme'),  run: () => { closeSpotlight(); document.getElementById('btn-theme-toggle')?.click(); } },
+    { title: t('dash.header.logout'),          run: () => { closeSpotlight(); document.getElementById('btn-logout')?.click(); } },
 ];
 
 
 const SPOTLIGHT_GROUP_ORDER = ['Recent', 'Actions', 'IPs', 'URLs', 'Events', 'Alerts', 'Config', 'Pages'];
+
+const SPOTLIGHT_GROUP_LABELS = {
+    Recent:  t('dash.spotlight.groupRecent'),
+    Actions: t('dash.spotlight.groupActions'),
+    IPs:     t('dash.spotlight.groupIps'),
+    URLs:    t('dash.spotlight.groupUrls'),
+    Events:  t('dash.spotlight.groupEvents'),
+    Alerts:  t('dash.spotlight.groupAlerts'),
+    Config:  t('dash.spotlight.groupConfig'),
+    Pages:   t('dash.spotlight.groupPages'),
+    Other:   t('dash.spotlight.groupOther'),
+};
+
+const SPOTLIGHT_IP_STATUS_LABELS = {
+    blocked:  t('dash.spotlight.statusBlocked'),
+    allowed:  t('dash.spotlight.statusAllowed'),
+    honeypot: t('dash.spotlight.statusHoneypot'),
+    seen:     t('dash.spotlight.statusSeen'),
+};
 
 
 const SPOTLIGHT_IP_RE = /\b(?:\d{1,3}\.){3}\d{1,3}\b|\banon:[0-9a-f]+\b/g;
@@ -1568,7 +1570,7 @@ function buildSpotlightIndex() {
         items.push({
             group: 'IPs',
             title: ip,
-            meta: status,
+            meta: SPOTLIGHT_IP_STATUS_LABELS[status] || status,
             icon: '◉',
             action: () => { closeSpotlight(); openExplainPanel(ip); },
         });
@@ -1593,7 +1595,7 @@ function buildSpotlightIndex() {
         items.push({
             group: 'URLs',
             title: url,
-            meta: `${count}× in feed`,
+            meta: t('dash.spotlight.inFeed', { n: count }),
             icon: '⬡',
             action: () => { closeSpotlight(); flashLogLinesMatchingURL(url); },
         });
@@ -1686,7 +1688,7 @@ function filterSpotlight(query) {
             recent.push({
                 group: 'Recent',
                 title: ip,
-                meta: 'blocked',
+                meta: SPOTLIGHT_IP_STATUS_LABELS.blocked,
                 icon: '◉',
                 action: () => { closeSpotlight(); openExplainPanel(ip); },
             });
@@ -1742,8 +1744,8 @@ function renderSpotlightResults() {
         const empty = document.createElement('div');
         empty.className = 'sr-empty';
         empty.textContent = state.spotlight.query
-            ? 'No matches'
-            : 'Type to search · ↑↓ to navigate';
+            ? t('dash.spotlight.noMatches')
+            : t('dash.spotlight.typeToSearch');
         container.appendChild(empty);
         return;
     }
@@ -1753,7 +1755,7 @@ function renderSpotlightResults() {
         if (item.group !== lastGroup) {
             const label = document.createElement('div');
             label.className = 'sr-group-label';
-            label.textContent = item.group || 'Other';
+            label.textContent = SPOTLIGHT_GROUP_LABELS[item.group || 'Other'] || item.group;
             container.appendChild(label);
             lastGroup = item.group;
         }
