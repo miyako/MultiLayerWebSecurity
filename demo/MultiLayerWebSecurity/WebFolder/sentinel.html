@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title data-i18n="login.pageTitle">Sentinel — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <script>(function(){var t=localStorage.getItem('sentinel-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <script src="i18n.js"></script>
+  <script src="i18n.login.js"></script>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMyIgZmlsbD0iIzFkNmZlYiIvPjx0ZXh0IHg9IjgiIHk9IjEyIiBmb250LXNpemU9IjExIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlM8L3RleHQ+PC9zdmc+">
+  <style>
+
+    :root {
+      --bg:          #07080a;
+      --surface:     #0d0f12;
+      --panel:       #111418;
+      --border:      #1c2128;
+      --border-2:    #252d36;
+      --text:        #dde4ed;
+      --text-2:      #7a8a9a;
+      --text-3:      #3d4f60;
+      --accent:      #1d6feb;
+      --accent-dim:  #1455bf;
+      --accent-glow: rgba(29,111,235,0.15);
+      --red:         #da3633;
+      --red-dim:     rgba(218,54,51,0.12);
+      --mono:        'Share Tech Mono', 'SF Mono', 'Courier New', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, monospace;
+      --ui:          'Rajdhani', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --radius:      6px;
+      --radius-sm:   4px;
+    }
+    [data-theme="light"] {
+      --bg:          #f0f2f5;
+      --surface:     #e4e7eb;
+      --panel:       #ffffff;
+      --border:      #d1d5db;
+      --border-2:    #b8bfc9;
+      --text:        #0d1117;
+      --text-2:      #374151;
+      --text-3:      #6b7280;
+      --accent-glow: rgba(29,111,235,0.09);
+      --red-dim:     rgba(218,54,51,0.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; }
+    body {
+      font-family: var(--ui);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(29,111,235,0.04) 0%, transparent 70%);
+      transition: background-color 0.22s ease, color 0.22s ease;
+    }
+    [data-theme="light"] body {
+      background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(29,111,235,0.07) 0%, transparent 70%);
+    }
+    .hidden { display: none !important; }
+    .mono   { font-family: var(--mono); }
+
+
+    #login-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      background-image: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(29,111,235,0.07) 0%, transparent 70%);
+    }
+    .login-card {
+      background: var(--panel);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .login-logo-mark {
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .login-logo-mark::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: var(--panel);
+      clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .login-brand { text-align: center; }
+    .login-brand h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .login-brand p {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      color: var(--text-3);
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+    .login-error {
+      width: 100%;
+      padding: 9px 14px;
+      background: var(--red-dim);
+      border: 1px solid rgba(218,54,51,0.25);
+      border-radius: var(--radius-sm);
+      color: var(--red);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+    .login-field-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .login-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--text-3);
+      text-transform: uppercase;
+    }
+    .login-input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-input:focus       { border-color: var(--accent); }
+    .login-input::placeholder { color: var(--text-3); }
+
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius-sm);
+      color: var(--text-2);
+      font-family: var(--ui);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn:hover   { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+    .btn:active  { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+    .btn-sm { padding: 5px 10px; font-size: 11px; }
+    .btn-xs { padding: 2px 8px; font-size: 12px; }
+    .btn-icon { font-size: 13px; line-height: 1; }
+    .btn-primary {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-dim); border-color: var(--accent-dim); color: #fff; }
+    .lang-toggle { position: absolute; top: 16px; right: 16px; }
+
+    .login-hint {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: var(--text-3);
+      text-align: center;
+    }
+
+
+    .login-dpg {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0;
+      padding: 12px;
+      border: 1px dashed var(--border-2);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.02);
+      width: 100%;
+    }
+    #btn-generate-passphrase { align-self: stretch; text-align: center; }
+    .dpg-display {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      border-radius: 4px;
+    }
+    .dpg-display.hidden { display: none; }
+    .dpg-code {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 20px;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      font-weight: 600;
+      user-select: all;
+    }
+    .dpg-ttl {
+      font-size: 10px;
+      color: var(--text-2);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .dpg-ttl.expired { color: var(--red); }
+    #btn-copy-passphrase { padding: 2px 8px; font-size: 12px; }
+    .dpg-default {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-2);
+      line-height: 1.4;
+      cursor: pointer;
+    }
+    .dpg-default input[type="checkbox"] { margin: 2px 0 0 0; cursor: pointer; }
+    .dpg-default small {
+      display: block;
+      font-size: 10px;
+      opacity: 0.75;
+    }
+
+    /* Japanese: wide tracking from the Latin design breaks up kana and kanji */
+    html:lang(ja) *:not(.header-title h1:not([data-i18n])):not(.login-brand h1):not(.live-clock) {
+      letter-spacing: normal !important;
+    }
+  </style>
+</head>
+<body>
+
+
+<div id="login-screen">
+  <button type="button" class="btn btn-sm lang-toggle" data-lang-toggle>JA</button>
+  <div class="login-card">
+    <div class="login-logo-mark"></div>
+    <div class="login-brand">
+      <h1>Sentinel</h1>
+      <p data-i18n="login.subtitle">4D Defense Command Center</p>
+    </div>
+    <div id="login-error" class="login-error hidden"></div>
+    <div class="login-field-wrap">
+      <label class="login-label" for="login-passphrase" data-i18n="login.passphraseLabel">Passphrase</label>
+      <input
+        id="login-passphrase"
+        type="password"
+        class="login-input"
+        placeholder="Enter passphrase"
+        data-i18n-placeholder="login.passphrasePlaceholder"
+        autocomplete="current-password"
+        autofocus
+      >
+    </div>
+
+    <div class="login-dpg" id="dpg-block">
+      <button type="button" class="btn btn-sm" id="btn-generate-passphrase">
+        <span class="btn-icon">⟳</span> <span data-i18n="login.dpgGenerate">Generate Passphrase</span>
+      </button>
+      <div class="dpg-display hidden" id="dpg-display">
+        <code class="dpg-code" id="dpg-code">—</code>
+        <span class="dpg-ttl" id="dpg-ttl">expires in 5:00</span>
+        <button type="button" class="btn btn-xs" id="btn-copy-passphrase" title="Copy to clipboard" data-i18n-title="login.dpgCopyTitle">⎘</button>
+      </div>
+      <label class="dpg-default">
+        <input type="checkbox" id="dpg-set-default">
+        <span><span data-i18n="login.dpgSetDefault">Set as default</span> <small data-i18n="login.dpgSetDefaultNote">(survives logout, timeout, and lockout)</small></span>
+      </label>
+    </div>
+    <button id="login-btn" class="btn btn-primary">
+      <span class="btn-icon">⬡</span> <span data-i18n="login.authenticate">Authenticate</span>
+    </button>
+    <p class="login-hint" data-i18n="login.hint">Contact the system administrator for access.</p>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+
+const API = {
+  status:   '/admin/auth/status',
+  login:    '/admin/auth/login',
+  dpg:      '/admin/auth/generate-passphrase',
+};
+
+const $ = (id) => document.getElementById(id);
+
+async function api(url, method = 'GET', body = null) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin' };
+  if (body !== null) opts.body = JSON.stringify(body);
+  try {
+    const r = await fetch(url, opts);
+    if (r.status === 401 || r.status === 403) return { __auth: false };
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch (e) {
+    console.warn('[Login] API error ' + url + ':', e.message);
+    return null;
+  }
+}
+
+
+function showError(msg) {
+  const el = $('login-error');
+  if (!el) return;
+  if (msg) {
+    el.textContent = msg;
+    el.classList.remove('hidden');
+  } else {
+    el.classList.add('hidden');
+  }
+}
+
+
+const dpg = { code: null, expiresAt: 0, ttlTimer: null };
+
+function clearDpg() {
+  dpg.code = null;
+  dpg.expiresAt = 0;
+  if (dpg.ttlTimer) { clearInterval(dpg.ttlTimer); dpg.ttlTimer = null; }
+  $('dpg-display')?.classList.add('hidden');
+  $('dpg-code') && ($('dpg-code').textContent = '—');
+  $('dpg-ttl')  && ($('dpg-ttl').textContent = t('login.dpgExpiresIn', { time: '5:00' }));
+  const cb = $('dpg-set-default');
+  if (cb) cb.checked = false;
+}
+
+function renderTtl() {
+  const ttlEl = $('dpg-ttl');
+  if (!ttlEl) return;
+  const remainingMs = dpg.expiresAt - Date.now();
+  if (remainingMs <= 0) {
+    ttlEl.textContent = t('login.dpgExpired');
+    ttlEl.classList.add('expired');
+    clearDpg();
+    return;
+  }
+  const sec = Math.floor(remainingMs / 1000);
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  ttlEl.textContent = t('login.dpgExpiresIn', { time: m + ':' + String(s).padStart(2, '0') });
+}
+
+async function generateDpg() {
+  const btn = $('btn-generate-passphrase');
+  if (btn) btn.disabled = true;
+  try {
+    const r = await api(API.dpg, 'POST', {});
+    if (!r || r.__auth === false) {
+      showError(t('login.errUnreachable'));
+      return;
+    }
+    if (r.success === false) {
+      const msg = r.retryAfterSec
+        ? t('login.errTooManyGenerations', { n: r.retryAfterSec })
+        : (r.message || t('login.errGenerationRefused'));
+      showError(msg);
+      return;
+    }
+    showError('');
+    dpg.code = r.passphrase;
+    dpg.expiresAt = Date.now() + (r.expiresInSec * 1000);
+    const codeEl = $('dpg-code');
+    if (codeEl) codeEl.textContent = r.passphrase;
+    $('dpg-display')?.classList.remove('hidden');
+    const input = $('login-passphrase');
+    if (input) input.value = r.passphrase;
+    if (dpg.ttlTimer) clearInterval(dpg.ttlTimer);
+    renderTtl();
+    dpg.ttlTimer = setInterval(renderTtl, 1000);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function copyDpg() {
+  if (!dpg.code) return;
+  const btn = $('btn-copy-passphrase');
+  try {
+    await navigator.clipboard.writeText(dpg.code);
+    if (btn) {
+      const original = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(() => { btn.textContent = original; }, 1200);
+    }
+  } catch (e) {
+    showError(t('login.errClipboard'));
+  }
+}
+
+
+async function doLogin() {
+  const input = $('login-passphrase');
+  const btn   = $('login-btn');
+  const phrase = input ? input.value : '';
+  if (!phrase) return;
+
+  if (btn) btn.disabled = true;
+  showError('');
+
+  const setAsDefault = $('dpg-set-default')?.checked ?? false;
+  const result = await api(API.login, 'POST', { passphrase: phrase, setAsDefault });
+
+  if (btn) btn.disabled = false;
+
+  if (!result) {
+    showError(t('login.errAuthError'));
+    return;
+  }
+  if (result.__auth === false || result.success === false) {
+    showError(t('login.errAuthFailed'));
+    if (input) { input.value = ''; input.focus(); }
+    return;
+  }
+  if (result.success !== true) {
+    showError(t('login.errAuthError'));
+    return;
+  }
+
+
+  clearDpg();
+  window.location.replace('/dashboard');
+}
+
+
+async function boot() {
+
+
+  if (new URLSearchParams(location.search).get('reason') === 'expired') {
+    showError(t('login.errSessionExpired'));
+  }
+
+
+  $('login-btn')?.addEventListener('click', doLogin);
+  $('login-passphrase')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+  $('btn-generate-passphrase')?.addEventListener('click', generateDpg);
+  $('btn-copy-passphrase')?.addEventListener('click', copyDpg);
+
+
+  const status = await api(API.status);
+  if (status && status.authenticated === true) {
+    window.location.replace('/dashboard');
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+</script>
+</body>
+</html>

@@ -24,7 +24,9 @@ DEFAULTS = {
     "code": {"colors": [], "fonts": ["Mono", "Courier", "Menlo", "Consolas", "Monaco"], "indent": 5},
     "bullets": {"fonts": ["SymbolMT", "Wingdings-Regular"], "strip_fonts": ["ArialMT"]},
     "caption": {"italic": True, "min_x": 0},
-    "table": {"size": None},        # font size used only by table cells, or null
+    "table": {"size": None,         # font size used only by table cells, or null
+              "ruled": False},      # detect ruled (vector) tables with pymupdf find_tables
+    "callout": {"italic": False},   # all-italic lines become > blockquotes instead of captions
     "paragraph": {"gap": 3, "short_line_x1": 470},
     "ocr": {"psm": 11, "min_conf": 30, "noise": r"^[E ]+$"},
     "figure_fonts": {},             # {"light"|"regular"|"bold": [path or path#index, ...]}

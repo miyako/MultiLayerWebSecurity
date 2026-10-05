@@ -1,0 +1,45 @@
+/* Strings for sentinel.html (login page). Load after i18n.js. */
+I18N.add({
+  en: {
+    'login.pageTitle': 'Sentinel — Login',
+    'login.subtitle': '4D Defense Command Center',
+    'login.passphraseLabel': 'Passphrase',
+    'login.passphrasePlaceholder': 'Enter passphrase',
+    'login.dpgGenerate': 'Generate Passphrase',
+    'login.dpgCopyTitle': 'Copy to clipboard',
+    'login.dpgSetDefault': 'Set as default',
+    'login.dpgSetDefaultNote': '(survives logout, timeout, and lockout)',
+    'login.dpgExpiresIn': 'expires in {time}',
+    'login.dpgExpired': 'expired',
+    'login.authenticate': 'Authenticate',
+    'login.hint': 'Contact the system administrator for access.',
+    'login.errUnreachable': 'Could not reach server. Try again in a moment.',
+    'login.errTooManyGenerations': 'Too many generations — wait {n}s.',
+    'login.errGenerationRefused': 'Generation refused.',
+    'login.errClipboard': 'Clipboard copy failed.',
+    'login.errAuthError': 'Authentication error. Try again.',
+    'login.errAuthFailed': 'Authentication failed. Check your passphrase.',
+    'login.errSessionExpired': 'Session expired. Please authenticate again.'
+  },
+  ja: {
+    'login.pageTitle': 'Sentinel — ログイン',
+    'login.subtitle': '4D防御コマンドセンター',
+    'login.passphraseLabel': 'パスフレーズ',
+    'login.passphrasePlaceholder': 'パスフレーズを入力',
+    'login.dpgGenerate': 'パスフレーズを生成',
+    'login.dpgCopyTitle': 'クリップボードにコピー',
+    'login.dpgSetDefault': 'デフォルトに設定',
+    'login.dpgSetDefaultNote': '（ログアウト、タイムアウト、ロックアウト後も有効）',
+    'login.dpgExpiresIn': '有効期限まで{time}',
+    'login.dpgExpired': '期限切れ',
+    'login.authenticate': '認証',
+    'login.hint': 'アクセス権についてはシステム管理者にお問い合わせください。',
+    'login.errUnreachable': 'サーバーに接続できません。しばらくしてから再試行してください。',
+    'login.errTooManyGenerations': '生成回数が多すぎます。{n}秒待ってから再試行してください。',
+    'login.errGenerationRefused': '生成が拒否されました。',
+    'login.errClipboard': 'クリップボードへのコピーに失敗しました。',
+    'login.errAuthError': '認証エラーが発生しました。再試行してください。',
+    'login.errAuthFailed': '認証に失敗しました。パスフレーズを確認してください。',
+    'login.errSessionExpired': 'セッションの有効期限が切れました。再度認証してください。'
+  }
+});

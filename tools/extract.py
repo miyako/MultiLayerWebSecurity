@@ -40,8 +40,73 @@ def write(path: Path, text: str, force: bool):
     print(f"wrote: {path.relative_to(ROOT)}")
 
 
+def esc(text):
+    """Escape characters that Markdown would read as markup (<tag, *)."""
+    return re.sub(r"<(?=[A-Za-z/!])", "&lt;", text).replace("*", r"\*")
+
+
+def is_bold(span):
+    return "Bold" in font_of(span)
+
+
+def is_italic(span):
+    return "Italic" in font_of(span) or "Oblique" in font_of(span)
+
+
+def cell_text(page, rect):
+    """(text, all_bold, x) of a table cell. Lines are joined; a wrapped token such as a regex
+    or path (no spaces, contains ^$|\\/) is joined without a space."""
+    lines, bold, x = [], True, None
+    for b in page.get_text("dict", clip=rect)["blocks"]:
+        for l in b.get("lines", []):
+            spans = [s for s in l["spans"] if s["text"].strip()]
+            if not spans:
+                continue
+            bold = bold and all(is_bold(s) for s in spans)
+            x = l["bbox"][0] if x is None else min(x, l["bbox"][0])
+            lines.append("".join(s["text"] for s in l["spans"]).strip())
+    if len(lines) > 1 and all(" " not in l for l in lines) and re.search(r"[\^$|\\/]", "".join(lines)):
+        return "".join(lines), bold, x
+    return join_lines(lines), bool(lines) and bold, x
+
+
+def table_rows(page, table):
+    """[[cells], is_header] for a ruled table. Logical columns are the text x positions of the
+    first row; every other cell goes to the nearest column (the grid has padding columns)."""
+    rows = []
+    for r in table.rows:
+        cells = [cell_text(page, pymupdf.Rect(c)) for c in r.cells if c]
+        cells = [c for c in cells if c[0]]
+        if cells:
+            rows.append(cells)
+    if not rows:
+        return []
+    cols = sorted(c[2] for c in rows[0])
+    out = []
+    for cells in rows:
+        texts = [""] * len(cols)
+        for t, _, x in cells:
+            i = min(range(len(cols)), key=lambda k: abs(cols[k] - x))
+            texts[i] = join_lines([texts[i], t]) if texts[i] else t
+        out.append([texts, all(b for _, b, _ in cells)])
+    return out
+
+
+def merge_row(dst, src):
+    for i, t in enumerate(src):
+        if t:
+            dst[i] = join_lines([dst[i], t]) if dst[i] else t
+
+
 def line_items(page):
     items = []
+    tables = []
+    if CFG["table"].get("ruled"):
+        for t in page.find_tables().tables:
+            rect = pymupdf.Rect(t.bbox)
+            tables.append(rect)
+            items.append({"kind": "table", "y0": rect.y0, "y1": rect.y1, "x": round(rect.x0),
+                          "rows": table_rows(page, t)})
     for b in page.get_text("dict")["blocks"]:
         if b["type"] != 0:
             continue
@@ -49,6 +114,8 @@ def line_items(page):
             spans = list(l["spans"])
             x0, y0, x1, y1 = l["bbox"]
             if y0 > CFG["footer_y"] or y0 < CFG["header_y"]:  # running header/footer
+                continue
+            if any(pymupdf.Point((x0 + x1) / 2, (y0 + y1) / 2) in r for r in tables):
                 continue
             items.append({"kind": "line", "x": round(x0), "y0": y0, "y1": y1, "x1": x1,
                           "spans": spans, "text": "".join(s["text"] for s in spans)})
@@ -88,8 +155,8 @@ def is_caption(item):
 def inline_md(spans):
     out = []
     for s in spans:
-        t = s["text"]
-        if t.strip() and s["color"] not in CODE_COLORS and "Bold" in font_of(s):
+        t = esc(s["text"])
+        if t.strip() and s["color"] not in CODE_COLORS and is_bold(s):
             lead = t[: len(t) - len(t.lstrip())]
             trail = t[len(t.rstrip()):]
             t = f"{lead}**{t.strip()}**{trail}"
@@ -137,11 +204,15 @@ def extract_body(doc):
     out = []
     cover = CFG["cover"]
     p1 = [it for it in line_items(doc[cover["page"] - 1]) if it["kind"] == "line" and it["text"].strip()]
-    title, *rest = (it["text"].strip() for it in p1[:cover["lines"]])
+    head = p1[:cover["lines"]]
+    style = lambda it: (font_of(it["spans"][0]), round(it["spans"][0]["size"]))
+    n = next((i for i, it in enumerate(head) if style(it) != style(head[0])), len(head))
+    title = join_lines([it["text"] for it in head[:n]])
+    rest = [it["text"].strip() for it in head[n:]]
     out.append(f"# {title}\n\n" + "".join(f"{r}\n\n" for r in rest).rstrip("\n") + "\n")
 
     figures = []
-    state = {"para": [], "code": [], "bullets": [], "in_bullet": False, "table": []}
+    state = {"para": [], "code": [], "bullets": [], "in_bullet": False, "table": [], "callout": []}
     body_x = 72
     prev = None
 
@@ -175,12 +246,44 @@ def extract_body(doc):
             out.append("\n".join(md) + "\n")
             state["table"] = []
 
+    def flush_callout():
+        if state["callout"]:
+            out.append("> " + join_lines(state["callout"]) + "\n")
+            state["callout"] = []
+
     def flush_all():
-        flush_para(); flush_bullets(); flush_code(); flush_table()
+        flush_para(); flush_bullets(); flush_code(); flush_table(); flush_callout()
+
+    def add_ruled_table(rows):
+        """Append a ruled table; a table that repeats the previous header continues it (page break)."""
+        nhead = 0
+        while nhead < len(rows) and rows[nhead][1]:
+            nhead += 1
+        header = [""] * len(rows[0][0])
+        for texts, _ in rows[:nhead]:
+            merge_row(header, texts)
+        body = [texts for texts, _ in rows[nhead:]]
+        prev = out[-1] if out and isinstance(out[-1], dict) else None
+        if prev and prev["header"] == header and nhead:
+            target = prev
+        else:
+            target = {"header": header if nhead else body.pop(0), "rows": []}
+            out.append(target)
+        for texts in body:
+            if target["rows"] and not texts[0]:
+                merge_row(target["rows"][-1], texts)
+            else:
+                target["rows"].append(texts)
 
     skip = {p - 1 for p in CFG["skip_pages"]}
     for pno in (p for p in range(len(doc)) if p not in skip):
         for it in line_items(doc[pno]):
+            if it["kind"] == "table":
+                flush_all()
+                if it["rows"]:
+                    add_ruled_table(it["rows"])
+                prev = None
+                continue
             if it["kind"] == "image":
                 flush_all()
                 figures.append({"page": pno + 1, "xref": it["xref"], "width_pt": it["width_pt"]})
@@ -209,6 +312,17 @@ def extract_body(doc):
                 prev = None
                 continue
 
+            if CFG.get("callout", {}).get("italic") and all(
+                    is_italic(s) for s in it["spans"] if s["text"].strip()):
+                flush_para(); flush_bullets(); flush_code(); flush_table()
+                if state["callout"] and it["y0"] - state["callout_y1"] > CFG["paragraph"]["gap"] + 6:
+                    flush_callout()
+                state["callout"].append(inline_md(it["spans"]))
+                state["callout_y1"] = it["y1"]
+                prev = it
+                continue
+            flush_callout()
+
             if is_caption(it):
                 flush_all()
                 caption = text.strip()
@@ -232,8 +346,7 @@ def extract_body(doc):
             if fonts & MARKERS:
                 flush_para(); flush_code()
                 state["in_bullet"] = True
-                rest = "".join(s["text"] for s in it["spans"]
-                               if font_of(s) not in MARKERS | STRIP_FONTS)
+                rest = inline_md([s for s in it["spans"] if font_of(s) not in MARKERS | STRIP_FONTS])
                 state["bullets"].append([rest] if rest.strip() else [])
                 prev = it
                 continue
@@ -244,7 +357,9 @@ def extract_body(doc):
                 prev = it
                 continue
 
-            if it["x"] != body_x and is_code_line(it, body_x):
+            has_code = any((s["color"] in CODE_COLORS or is_code_font(s)) and s["text"].strip()
+                           for s in it["spans"])
+            if (it["x"] != body_x or has_code) and is_code_line(it, body_x):
                 flush_para(); flush_bullets()
                 state["code"].append(it)
                 prev = it
@@ -260,7 +375,15 @@ def extract_body(doc):
             state["para"].append(inline_md(it["spans"]))
             prev = it
     flush_all()
-    return "\n".join(out), figures
+
+    def render(o):
+        if not isinstance(o, dict):
+            return o
+        cell = lambda t: esc(t).replace("|", r"\|")
+        md = ["| " + " | ".join(cell(t) for t in o["header"]) + " |", "|" + "---|" * len(o["header"])]
+        md += ["| " + " | ".join(cell(t) for t in r) + " |" for r in o["rows"]]
+        return "\n".join(md) + "\n"
+    return "\n".join(render(o) for o in out), figures
 
 
 def ocr_lines(png: Path):

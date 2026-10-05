@@ -8,3 +8,5 @@ demo/*/Data/
 demo/*/Logs/
 demo/*/userPreferences.*/
 demo/*/Project/DerivedData/
+demo/*/Files/uploads/
+demo/*/Libraries/*.dylib

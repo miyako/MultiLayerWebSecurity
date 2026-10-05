@@ -44,6 +44,8 @@ h4 { font-size: 11pt; margin: 1.1em 0 0.4em; }
   padding-top: 2.6in;
 }
 .cover h1 { font-size: 20pt; margin: 0 0 1.2em; }
+/* Phrase-aware line breaks for CJK headings (Chrome 119+, uses <html lang>). */
+h1, h2, h3, h4, .toc .t { word-break: auto-phrase; text-wrap: balance; }
 .cover p { text-align: center; margin: 0 0 0.6em; }
 
 /* Table of contents */
@@ -63,6 +65,16 @@ h4 { font-size: 11pt; margin: 1.1em 0 0.4em; }
   margin: 0 0.4em 0.45em;
 }
 .toc .p { order: 2; min-width: 1.6em; text-align: right; }
+
+/* Notes and warnings (italic callouts in the original) */
+blockquote {
+  margin: 0.6em 0 0.9em;
+  padding: 0.4em 0.9em;
+  border-left: 3px solid var(--accent, #2f5496);
+  background: #f7f9fc;
+  font-size: 9.5pt;
+}
+blockquote p { text-align: left; margin: 0; }
 
 /* Lists */
 ul { margin: 0 0 0.6em; padding-left: 1.6em; }
@@ -98,7 +110,11 @@ figcaption {
 }
 
 /* Tables */
-table { border-collapse: collapse; margin: 0.4em auto 1em; font-size: 10pt; }
-th, td { border-bottom: 1px solid #ccc; padding: 0.25em 1.2em; }
-th { text-align: left; border-bottom: 1.5px solid #888; }
-td:last-child, th:last-child { text-align: right; }
+table { border-collapse: collapse; margin: 0.4em 0 1em; font-size: 9.5pt; line-height: 1.6; width: 100%; }
+th, td { border-bottom: 1px solid #ccc; padding: 0.3em 0.6em; text-align: left; vertical-align: top; }
+th { border-bottom: 1.5px solid #888; white-space: nowrap; }
+td { overflow-wrap: anywhere; line-break: strict; }
+td:first-child { min-width: 4em; }
+td:nth-child(2) { min-width: 5.5em; }
+tr { break-inside: avoid; }
+thead { display: table-header-group; }
