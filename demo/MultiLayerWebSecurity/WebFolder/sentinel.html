@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Sentinel — Login</title>
+  <title data-i18n="login.pageTitle">Sentinel — Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <script>(function(){var t=localStorage.getItem('sentinel-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <script src="i18n.js"></script>
+  <script src="i18n.login.js"></script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMyIgZmlsbD0iIzFkNmZlYiIvPjx0ZXh0IHg9IjgiIHk9IjEyIiBmb250LXNpemU9IjExIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlM8L3RleHQ+PC9zdmc+">
   <style>
 
@@ -26,8 +28,8 @@
       --accent-glow: rgba(29,111,235,0.15);
       --red:         #da3633;
       --red-dim:     rgba(218,54,51,0.12);
-      --mono:        'Share Tech Mono', 'SF Mono', 'Courier New', monospace;
-      --ui:          'Rajdhani', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --mono:        'Share Tech Mono', 'SF Mono', 'Courier New', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, monospace;
+      --ui:          'Rajdhani', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       --radius:      6px;
       --radius-sm:   4px;
     }
@@ -194,6 +196,7 @@
       color: #fff;
     }
     .btn-primary:hover { background: var(--accent-dim); border-color: var(--accent-dim); color: #fff; }
+    .lang-toggle { position: absolute; top: 16px; right: 16px; }
 
     .login-hint {
       font-family: var(--mono);
@@ -264,20 +267,22 @@
 
 
 <div id="login-screen">
+  <button type="button" class="btn btn-sm lang-toggle" data-lang-toggle>JA</button>
   <div class="login-card">
     <div class="login-logo-mark"></div>
     <div class="login-brand">
       <h1>Sentinel</h1>
-      <p>4D Defense Command Center</p>
+      <p data-i18n="login.subtitle">4D Defense Command Center</p>
     </div>
     <div id="login-error" class="login-error hidden"></div>
     <div class="login-field-wrap">
-      <label class="login-label" for="login-passphrase">Passphrase</label>
+      <label class="login-label" for="login-passphrase" data-i18n="login.passphraseLabel">Passphrase</label>
       <input
         id="login-passphrase"
         type="password"
         class="login-input"
         placeholder="Enter passphrase"
+        data-i18n-placeholder="login.passphrasePlaceholder"
         autocomplete="current-password"
         autofocus
       >
@@ -285,22 +290,22 @@
 
     <div class="login-dpg" id="dpg-block">
       <button type="button" class="btn btn-sm" id="btn-generate-passphrase">
-        <span class="btn-icon">⟳</span> Generate Passphrase
+        <span class="btn-icon">⟳</span> <span data-i18n="login.dpgGenerate">Generate Passphrase</span>
       </button>
       <div class="dpg-display hidden" id="dpg-display">
         <code class="dpg-code" id="dpg-code">—</code>
         <span class="dpg-ttl" id="dpg-ttl">expires in 5:00</span>
-        <button type="button" class="btn btn-xs" id="btn-copy-passphrase" title="Copy to clipboard">⎘</button>
+        <button type="button" class="btn btn-xs" id="btn-copy-passphrase" title="Copy to clipboard" data-i18n-title="login.dpgCopyTitle">⎘</button>
       </div>
       <label class="dpg-default">
         <input type="checkbox" id="dpg-set-default">
-        <span>Set as default <small>(survives logout, timeout, and lockout)</small></span>
+        <span><span data-i18n="login.dpgSetDefault">Set as default</span> <small data-i18n="login.dpgSetDefaultNote">(survives logout, timeout, and lockout)</small></span>
       </label>
     </div>
     <button id="login-btn" class="btn btn-primary">
-      <span class="btn-icon">⬡</span> Authenticate
+      <span class="btn-icon">⬡</span> <span data-i18n="login.authenticate">Authenticate</span>
     </button>
-    <p class="login-hint">Contact the system administrator for access.</p>
+    <p class="login-hint" data-i18n="login.hint">Contact the system administrator for access.</p>
   </div>
 </div>
 
@@ -351,7 +356,7 @@ function clearDpg() {
   if (dpg.ttlTimer) { clearInterval(dpg.ttlTimer); dpg.ttlTimer = null; }
   $('dpg-display')?.classList.add('hidden');
   $('dpg-code') && ($('dpg-code').textContent = '—');
-  $('dpg-ttl')  && ($('dpg-ttl').textContent = 'expires in 5:00');
+  $('dpg-ttl')  && ($('dpg-ttl').textContent = t('login.dpgExpiresIn', { time: '5:00' }));
   const cb = $('dpg-set-default');
   if (cb) cb.checked = false;
 }
@@ -361,7 +366,7 @@ function renderTtl() {
   if (!ttlEl) return;
   const remainingMs = dpg.expiresAt - Date.now();
   if (remainingMs <= 0) {
-    ttlEl.textContent = 'expired';
+    ttlEl.textContent = t('login.dpgExpired');
     ttlEl.classList.add('expired');
     clearDpg();
     return;
@@ -369,7 +374,7 @@ function renderTtl() {
   const sec = Math.floor(remainingMs / 1000);
   const m = Math.floor(sec / 60);
   const s = sec % 60;
-  ttlEl.textContent = 'expires in ' + m + ':' + String(s).padStart(2, '0');
+  ttlEl.textContent = t('login.dpgExpiresIn', { time: m + ':' + String(s).padStart(2, '0') });
 }
 
 async function generateDpg() {
@@ -378,13 +383,13 @@ async function generateDpg() {
   try {
     const r = await api(API.dpg, 'POST', {});
     if (!r || r.__auth === false) {
-      showError('Could not reach server. Try again in a moment.');
+      showError(t('login.errUnreachable'));
       return;
     }
     if (r.success === false) {
       const msg = r.retryAfterSec
-        ? 'Too many generations — wait ' + r.retryAfterSec + 's.'
-        : (r.message || 'Generation refused.');
+        ? t('login.errTooManyGenerations', { n: r.retryAfterSec })
+        : (r.message || t('login.errGenerationRefused'));
       showError(msg);
       return;
     }
@@ -415,7 +420,7 @@ async function copyDpg() {
       setTimeout(() => { btn.textContent = original; }, 1200);
     }
   } catch (e) {
-    showError('Clipboard copy failed.');
+    showError(t('login.errClipboard'));
   }
 }
 
@@ -435,16 +440,16 @@ async function doLogin() {
   if (btn) btn.disabled = false;
 
   if (!result) {
-    showError('Authentication error. Try again.');
+    showError(t('login.errAuthError'));
     return;
   }
   if (result.__auth === false || result.success === false) {
-    showError('Authentication failed. Check your passphrase.');
+    showError(t('login.errAuthFailed'));
     if (input) { input.value = ''; input.focus(); }
     return;
   }
   if (result.success !== true) {
-    showError('Authentication error. Try again.');
+    showError(t('login.errAuthError'));
     return;
   }
 
@@ -458,7 +463,7 @@ async function boot() {
 
 
   if (new URLSearchParams(location.search).get('reason') === 'expired') {
-    showError('Session expired. Please authenticate again.');
+    showError(t('login.errSessionExpired'));
   }
 
 

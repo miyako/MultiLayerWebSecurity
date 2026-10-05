@@ -3,89 +3,89 @@
 const AUTH_REQUIRED = Symbol('AUTH_REQUIRED');
 
 const SECTIONS = [
-  { id: 'rateLimiting', title: 'Rate Limiting' },
-  { id: 'validation',   title: 'Request Validation' },
-  { id: 'monitoring',   title: 'CPU Monitoring' },
-  { id: 'panic',        title: 'Panic Mode' },
-  { id: 'honeypot',     title: 'Honeypot' },
-  { id: 'alerts',       title: 'Alerting' },
-  { id: 'logging',      title: 'Request Logging' },
-  { id: 'waf',          title: 'WAF' },
-  { id: 'security',     title: 'Security' },
-  { id: 'defenses',     title: 'Defense Switches' },
-  { id: 'server',       title: 'Server' },
-  { id: 'ui',           title: 'Dashboard UI' },
+  { id: 'rateLimiting', title: t('config.section.rateLimiting') },
+  { id: 'validation',   title: t('config.section.validation') },
+  { id: 'monitoring',   title: t('config.section.monitoring') },
+  { id: 'panic',        title: t('config.section.panic') },
+  { id: 'honeypot',     title: t('config.section.honeypot') },
+  { id: 'alerts',       title: t('config.section.alerts') },
+  { id: 'logging',      title: t('config.section.logging') },
+  { id: 'waf',          title: t('config.section.waf') },
+  { id: 'security',     title: t('config.section.security') },
+  { id: 'defenses',     title: t('config.section.defenses') },
+  { id: 'server',       title: t('config.section.server') },
+  { id: 'ui',           title: t('config.section.ui') },
 ];
 
 const CONFIG_SCHEMA = [
 
-  { path:'rateLimiting.maxRequests',          label:'Max Requests',         type:'posInt',  unit:'req',   tooltip:'Per-IP request budget within the rolling window.' },
-  { path:'rateLimiting.windowSeconds',        label:'Window',               type:'posInt',  unit:'sec',   tooltip:'Length of the rolling rate-limit window.' },
-  { path:'rateLimiting.blockDurationSeconds', label:'Block Duration',       type:'posInt',  unit:'sec',   tooltip:'How long a blocked IP stays on the blocklist.' },
-  { path:'rateLimiting.burstThreshold',       label:'Burst Threshold',      type:'posInt',  unit:'req',   tooltip:'Max requests in burstWindowSeconds before instant block.' },
-  { path:'rateLimiting.burstWindowSeconds',   label:'Burst Window',         type:'posInt',  unit:'sec',   tooltip:'Time window for burst detection.' },
-  { path:'rateLimiting.permanentBlockStrikes',label:'Permanent Strikes',    type:'posInt',  unit:'',      tooltip:'Strike count that escalates to permanent block. Used as divisor — must be > 0.' },
-  { path:'rateLimiting.globalMaxPerMinute',   label:'Global Cap / min',     type:'posInt',  unit:'req',   tooltip:'Aggregate request cap across all IPs (anti-distributed-flood).' },
+  { path:'rateLimiting.maxRequests',          label:t('config.label.rateLimiting.maxRequests'),           type:'posInt',  unit:t('config.unit.req'),   tooltip:t('config.tip.rateLimiting.maxRequests') },
+  { path:'rateLimiting.windowSeconds',        label:t('config.label.rateLimiting.windowSeconds'),         type:'posInt',  unit:t('config.unit.sec'),   tooltip:t('config.tip.rateLimiting.windowSeconds') },
+  { path:'rateLimiting.blockDurationSeconds', label:t('config.label.rateLimiting.blockDurationSeconds'),  type:'posInt',  unit:t('config.unit.sec'),   tooltip:t('config.tip.rateLimiting.blockDurationSeconds') },
+  { path:'rateLimiting.burstThreshold',       label:t('config.label.rateLimiting.burstThreshold'),        type:'posInt',  unit:t('config.unit.req'),   tooltip:t('config.tip.rateLimiting.burstThreshold') },
+  { path:'rateLimiting.burstWindowSeconds',   label:t('config.label.rateLimiting.burstWindowSeconds'),    type:'posInt',  unit:t('config.unit.sec'),   tooltip:t('config.tip.rateLimiting.burstWindowSeconds') },
+  { path:'rateLimiting.permanentBlockStrikes',label:t('config.label.rateLimiting.permanentBlockStrikes'), type:'posInt',  unit:'',      tooltip:t('config.tip.rateLimiting.permanentBlockStrikes') },
+  { path:'rateLimiting.globalMaxPerMinute',   label:t('config.label.rateLimiting.globalMaxPerMinute'),    type:'posInt',  unit:t('config.unit.req'),   tooltip:t('config.tip.rateLimiting.globalMaxPerMinute') },
 
-  { path:'validation.maxBodySizeMB',          label:'Max Body Size',        type:'posInt',  unit:'MB',    tooltip:'Reject POST/PUT bodies larger than this.' },
-  { path:'validation.maxURLLength',           label:'Max URL Length',       type:'posInt',  unit:'bytes', tooltip:'Reject URLs longer than this.' },
-  { path:'validation.maxHeaderBytes',         label:'Max Header Bytes',     type:'posInt',  unit:'bytes', tooltip:'Reject requests with header section larger than this.' },
-  { path:'validation.requireUserAgent',       label:'Require User-Agent',   type:'bool',                  tooltip:'Reject requests with empty/missing User-Agent header.' },
+  { path:'validation.maxBodySizeMB',          label:t('config.label.validation.maxBodySizeMB'),           type:'posInt',  unit:'MB',    tooltip:t('config.tip.validation.maxBodySizeMB') },
+  { path:'validation.maxURLLength',           label:t('config.label.validation.maxURLLength'),            type:'posInt',  unit:t('config.unit.bytes'), tooltip:t('config.tip.validation.maxURLLength') },
+  { path:'validation.maxHeaderBytes',         label:t('config.label.validation.maxHeaderBytes'),          type:'posInt',  unit:t('config.unit.bytes'), tooltip:t('config.tip.validation.maxHeaderBytes') },
+  { path:'validation.requireUserAgent',       label:t('config.label.validation.requireUserAgent'),        type:'bool',                  tooltip:t('config.tip.validation.requireUserAgent') },
 
-  { path:'monitoring.cpuSampleIntervalMs',    label:'CPU Sample Interval',  type:'posInt',  unit:'ms',    tooltip:'How often the CPU monitor worker samples process CPU.' },
-  { path:'monitoring.cpuPanicEnabled',        label:'CPU Panic Enabled',    type:'bool',                  tooltip:'Auto-trigger panic mode when CPU stays above threshold.' },
-  { path:'monitoring.cpuPanicTriggerAbove',   label:'CPU Trigger Above',    type:'percent', unit:'%',     tooltip:'Panic triggers when CPU stays above this for cpuPanicMinDurationSec.' },
-  { path:'monitoring.cpuPanicLiftBelow',      label:'CPU Lift Below',       type:'percent', unit:'%',     tooltip:'Panic lifts when CPU drops below this. Must be < Trigger Above.' },
-  { path:'monitoring.cpuPanicMinDurationSec', label:'CPU Trigger Hold',     type:'nonNegInt', unit:'sec', tooltip:'CPU must stay above trigger this long before panic starts (0 = immediate).' },
+  { path:'monitoring.cpuSampleIntervalMs',    label:t('config.label.monitoring.cpuSampleIntervalMs'),     type:'posInt',  unit:t('config.unit.ms'),    tooltip:t('config.tip.monitoring.cpuSampleIntervalMs') },
+  { path:'monitoring.cpuPanicEnabled',        label:t('config.label.monitoring.cpuPanicEnabled'),         type:'bool',                  tooltip:t('config.tip.monitoring.cpuPanicEnabled') },
+  { path:'monitoring.cpuPanicTriggerAbove',   label:t('config.label.monitoring.cpuPanicTriggerAbove'),    type:'percent', unit:'%',     tooltip:t('config.tip.monitoring.cpuPanicTriggerAbove') },
+  { path:'monitoring.cpuPanicLiftBelow',      label:t('config.label.monitoring.cpuPanicLiftBelow'),       type:'percent', unit:'%',     tooltip:t('config.tip.monitoring.cpuPanicLiftBelow') },
+  { path:'monitoring.cpuPanicMinDurationSec', label:t('config.label.monitoring.cpuPanicMinDurationSec'),  type:'nonNegInt', unit:t('config.unit.sec'), tooltip:t('config.tip.monitoring.cpuPanicMinDurationSec') },
 
-  { path:'panic.autoTriggerEnabled',          label:'Auto-Trigger Panic',   type:'bool',                  tooltip:'Allow traffic-based auto panic.' },
-  { path:'panic.autoTriggerMultiplier',       label:'Trigger Multiplier',   type:'posInt',  unit:'×',     tooltip:'Auto-panic when current RPM exceeds (baseline × this).' },
-  { path:'panic.durationSeconds',             label:'Panic Duration',       type:'posInt',  unit:'sec',   tooltip:'How long panic mode stays active before auto-lifting.' },
-  { path:'panic.samplingMultiplier',          label:'Sampling Multiplier',  type:'posInt',  unit:'×',     tooltip:'During panic, accept 1/(samplingMultiplier) of requests.' },
-  { path:'panic.samplingRate',                label:'Panic Sampling Rate',  type:'percent', unit:'%',     tooltip:'Percentage of requests admitted during panic (1–100).' },
+  { path:'panic.autoTriggerEnabled',          label:t('config.label.panic.autoTriggerEnabled'),           type:'bool',                  tooltip:t('config.tip.panic.autoTriggerEnabled') },
+  { path:'panic.autoTriggerMultiplier',       label:t('config.label.panic.autoTriggerMultiplier'),        type:'posInt',  unit:'×',     tooltip:t('config.tip.panic.autoTriggerMultiplier') },
+  { path:'panic.durationSeconds',             label:t('config.label.panic.durationSeconds'),              type:'posInt',  unit:t('config.unit.sec'),   tooltip:t('config.tip.panic.durationSeconds') },
+  { path:'panic.samplingMultiplier',          label:t('config.label.panic.samplingMultiplier'),           type:'posInt',  unit:'×',     tooltip:t('config.tip.panic.samplingMultiplier') },
+  { path:'panic.samplingRate',                label:t('config.label.panic.samplingRate'),                 type:'percent', unit:'%',     tooltip:t('config.tip.panic.samplingRate') },
 
-  { path:'honeypot.enabled',                  label:'Honeypot Enabled',     type:'bool',                  tooltip:'Block IPs that hit honeypot paths.' },
-  { path:'honeypot.banDurationSec',           label:'Honeypot Ban',         type:'posInt',  unit:'sec',   tooltip:'How long honeypot-tripping IPs stay banned (default 86400 = 24h).' },
+  { path:'honeypot.enabled',                  label:t('config.label.honeypot.enabled'),                   type:'bool',                  tooltip:t('config.tip.honeypot.enabled') },
+  { path:'honeypot.banDurationSec',           label:t('config.label.honeypot.banDurationSec'),            type:'posInt',  unit:t('config.unit.sec'),   tooltip:t('config.tip.honeypot.banDurationSec') },
 
-  { path:'alerts.enabled',                    label:'Alerts Enabled',       type:'bool',                  tooltip:'Master switch for AlertManager.' },
-  { path:'alerts.rateLimitThreshold',         label:'RL Alert @',           type:'posInt',  unit:'hits',  tooltip:'Fire alert after N rate-limit rejections in a window.' },
-  { path:'alerts.blocklistThreshold',         label:'Blocklist Alert @',    type:'posInt',  unit:'IPs',   tooltip:'Fire alert when blocklist grows by this.' },
-  { path:'alerts.trafficSpikeMultiplier',     label:'Spike Multiplier',     type:'posInt',  unit:'×',     tooltip:'Traffic-spike alert when RPM exceeds (baseline × this).' },
-  { path:'alerts.wafRejectionThreshold',      label:'WAF Alert @',          type:'posInt',  unit:'hits',  tooltip:'Alert after N WAF rejections.' },
-  { path:'alerts.globalRateHitThreshold',     label:'Global Rate Alert @',  type:'posInt',  unit:'hits',  tooltip:'Alert after N global-cap rejections.' },
+  { path:'alerts.enabled',                    label:t('config.label.alerts.enabled'),                     type:'bool',                  tooltip:t('config.tip.alerts.enabled') },
+  { path:'alerts.rateLimitThreshold',         label:t('config.label.alerts.rateLimitThreshold'),          type:'posInt',  unit:t('config.unit.hits'),  tooltip:t('config.tip.alerts.rateLimitThreshold') },
+  { path:'alerts.blocklistThreshold',         label:t('config.label.alerts.blocklistThreshold'),          type:'posInt',  unit:t('config.unit.ips'),   tooltip:t('config.tip.alerts.blocklistThreshold') },
+  { path:'alerts.trafficSpikeMultiplier',     label:t('config.label.alerts.trafficSpikeMultiplier'),      type:'posInt',  unit:'×',     tooltip:t('config.tip.alerts.trafficSpikeMultiplier') },
+  { path:'alerts.wafRejectionThreshold',      label:t('config.label.alerts.wafRejectionThreshold'),       type:'posInt',  unit:t('config.unit.hits'),  tooltip:t('config.tip.alerts.wafRejectionThreshold') },
+  { path:'alerts.globalRateHitThreshold',     label:t('config.label.alerts.globalRateHitThreshold'),      type:'posInt',  unit:t('config.unit.hits'),  tooltip:t('config.tip.alerts.globalRateHitThreshold') },
 
-  { path:'logging.enabled',                   label:'Logging Enabled',      type:'bool',                  tooltip:'Master switch for RequestLogger.' },
-  { path:'logging.maxMemoryEntries',          label:'In-Memory Buffer',     type:'posInt',  unit:'rows',  tooltip:'Ring-buffer size before sampling kicks in.' },
-  { path:'logging.flushIntervalSeconds',      label:'Flush Interval',       type:'posInt',  unit:'sec',   tooltip:'How often to flush logs to disk.' },
-  { path:'logging.sampledLoggingThreshold',   label:'Sample @ RPM',         type:'posInt',  unit:'rpm',   tooltip:'Above this rate, only log a sampled percentage.' },
-  { path:'logging.samplingRate',              label:'Sampling Rate',        type:'percent', unit:'%',     tooltip:'Percentage of requests logged when sampling (1–100).' },
+  { path:'logging.enabled',                   label:t('config.label.logging.enabled'),                    type:'bool',                  tooltip:t('config.tip.logging.enabled') },
+  { path:'logging.maxMemoryEntries',          label:t('config.label.logging.maxMemoryEntries'),           type:'posInt',  unit:t('config.unit.rows'),  tooltip:t('config.tip.logging.maxMemoryEntries') },
+  { path:'logging.flushIntervalSeconds',      label:t('config.label.logging.flushIntervalSeconds'),       type:'posInt',  unit:t('config.unit.sec'),   tooltip:t('config.tip.logging.flushIntervalSeconds') },
+  { path:'logging.sampledLoggingThreshold',   label:t('config.label.logging.sampledLoggingThreshold'),    type:'posInt',  unit:'rpm',   tooltip:t('config.tip.logging.sampledLoggingThreshold') },
+  { path:'logging.samplingRate',              label:t('config.label.logging.samplingRate'),               type:'percent', unit:'%',     tooltip:t('config.tip.logging.samplingRate') },
 
-  { path:'waf.maxDecodePasses',               label:'Max Decode Passes',    type:'posInt',  unit:'',      tooltip:'URL-decode this many times to defeat nested encoding.' },
-  { path:'waf.maxPathDepth',                  label:'Max Path Depth',       type:'posInt',  unit:'',      tooltip:'Reject paths with more than N segments.' },
-  { path:'waf.strictASCII',                   label:'Strict ASCII',         type:'bool',                  tooltip:'Reject non-ASCII URL bytes.' },
+  { path:'waf.maxDecodePasses',               label:t('config.label.waf.maxDecodePasses'),                type:'posInt',  unit:'',      tooltip:t('config.tip.waf.maxDecodePasses') },
+  { path:'waf.maxPathDepth',                  label:t('config.label.waf.maxPathDepth'),                   type:'posInt',  unit:'',      tooltip:t('config.tip.waf.maxPathDepth') },
+  { path:'waf.strictASCII',                   label:t('config.label.waf.strictASCII'),                    type:'bool',                  tooltip:t('config.tip.waf.strictASCII') },
 
-  { path:'security.rejectUnknownURLs',        label:'Reject Unknown URLs',  type:'bool',                  tooltip:'404 anything not in the route table.' },
-  { path:'security.unknownURLStrikes',        label:'Strike Unknown URLs',  type:'bool',                  tooltip:'Count unknown-URL hits as strikes (escalates to block).' },
+  { path:'security.rejectUnknownURLs',        label:t('config.label.security.rejectUnknownURLs'),         type:'bool',                  tooltip:t('config.tip.security.rejectUnknownURLs') },
+  { path:'security.unknownURLStrikes',        label:t('config.label.security.unknownURLStrikes'),         type:'bool',                  tooltip:t('config.tip.security.unknownURLStrikes') },
 
-  { path:'defenses.master',                   label:'Master Switch',        type:'bool',                  tooltip:'Global kill-switch — when OFF, every defense layer is bypassed.' },
-  { path:'defenses.shield',                   label:'IP Interceptor',       type:'bool',                  tooltip:'Threat detection & IP blocklist enforcement.' },
-  { path:'defenses.rateLimit',                label:'Rate Limit',           type:'bool',                  tooltip:'Token-bucket rate limiting per IP.' },
-  { path:'defenses.handler',                  label:'Handler Defense',      type:'bool',                  tooltip:'HTTP request outer-perimeter filtering.' },
-  { path:'defenses.waf',                      label:'WAF',                  type:'bool',                  tooltip:'Recon/traversal request inspection.' },
-  { path:'defenses.honeypot',                 label:'Honeypot',             type:'bool',                  tooltip:'Honeypot path detection layer.' },
+  { path:'defenses.master',                   label:t('config.label.defenses.master'),                    type:'bool',                  tooltip:t('config.tip.defenses.master') },
+  { path:'defenses.shield',                   label:t('config.label.defenses.shield'),                    type:'bool',                  tooltip:t('config.tip.defenses.shield') },
+  { path:'defenses.rateLimit',                label:t('config.label.defenses.rateLimit'),                 type:'bool',                  tooltip:t('config.tip.defenses.rateLimit') },
+  { path:'defenses.handler',                  label:t('config.label.defenses.handler'),                   type:'bool',                  tooltip:t('config.tip.defenses.handler') },
+  { path:'defenses.waf',                      label:t('config.label.defenses.waf'),                       type:'bool',                  tooltip:t('config.tip.defenses.waf') },
+  { path:'defenses.honeypot',                 label:t('config.label.defenses.honeypot'),                  type:'bool',                  tooltip:t('config.tip.defenses.honeypot') },
 
-  { path:'server.port',                       label:'HTTP Port',            type:'posInt',  unit:'',      tooltip:'TCP port — restart required to change.', restart:true, readonly:true },
-  { path:'server.maxConcurrentRequests',      label:'Max Concurrent',       type:'posInt',  unit:'req',   tooltip:'Cap on in-flight requests.' },
-  { path:'server.sessionTimeoutMinutes',      label:'Session Timeout',      type:'posInt',  unit:'min',   tooltip:'Idle session expiration.' },
+  { path:'server.port',                       label:t('config.label.server.port'),                        type:'posInt',  unit:'',      tooltip:t('config.tip.server.port'), restart:true, readonly:true },
+  { path:'server.maxConcurrentRequests',      label:t('config.label.server.maxConcurrentRequests'),       type:'posInt',  unit:t('config.unit.req'),   tooltip:t('config.tip.server.maxConcurrentRequests') },
+  { path:'server.sessionTimeoutMinutes',      label:t('config.label.server.sessionTimeoutMinutes'),       type:'posInt',  unit:t('config.unit.min'),   tooltip:t('config.tip.server.sessionTimeoutMinutes') },
 
-  { path:'ui.refreshIntervalSeconds',         label:'Dashboard Refresh',    type:'posInt',  unit:'sec',   tooltip:'Polling cadence of the main dashboard.' },
+  { path:'ui.refreshIntervalSeconds',         label:t('config.label.ui.refreshIntervalSeconds'),          type:'posInt',  unit:t('config.unit.sec'),   tooltip:t('config.tip.ui.refreshIntervalSeconds') },
 ];
 
 const TYPE_VALIDATORS = {
-  posInt:    v => (Number.isInteger(+v) && +v > 0)                ? null : 'Must be a whole number greater than 0',
-  nonNegInt: v => (Number.isInteger(+v) && +v >= 0)               ? null : 'Must be a whole number ≥ 0',
-  percent:   v => (Number.isInteger(+v) && +v >= 1 && +v <= 100)  ? null : 'Must be a whole number between 1 and 100',
-  bool:      v => (typeof v === 'boolean')                         ? null : 'Must be true or false',
+  posInt:    v => (Number.isInteger(+v) && +v > 0)                ? null : t('config.err.posInt'),
+  nonNegInt: v => (Number.isInteger(+v) && +v >= 0)               ? null : t('config.err.nonNegInt'),
+  percent:   v => (Number.isInteger(+v) && +v >= 1 && +v <= 100)  ? null : t('config.err.percent'),
+  bool:      v => (typeof v === 'boolean')                         ? null : t('config.err.bool'),
 };
 
 
@@ -182,7 +182,7 @@ function renderRow(field) {
   labelEl.innerHTML =
     escapeHTML(field.label) +
     ' <span class="eq-tip" title="' + escapeHTML(field.tooltip || '') + '">ⓘ</span>' +
-    (field.restart ? ' <span class="eq-restart-pill">RESTART</span>' : '');
+    (field.restart ? ' <span class="eq-restart-pill">' + escapeHTML(t('config.restartPill')) + '</span>' : '');
   row.appendChild(labelEl);
 
 
@@ -306,18 +306,18 @@ function applyCrossFieldChecks() {
   const liftValid    = Number.isInteger(lift)    && lift    >= 1 && lift    <= 100;
 
   if (triggerValid && liftValid && lift >= trigger) {
-    paintFieldError('monitoring.cpuPanicLiftBelow', 'Must be less than CPU Trigger Above');
+    paintFieldError('monitoring.cpuPanicLiftBelow', t('config.err.liftBelowTrigger'));
   } else {
 
     const liftErr = fieldErrors.get('monitoring.cpuPanicLiftBelow');
-    if (liftErr === 'Must be less than CPU Trigger Above') {
+    if (liftErr === t('config.err.liftBelowTrigger')) {
       paintFieldError('monitoring.cpuPanicLiftBelow', null);
     }
 
     if (liftValid) {
 
       const stale = fieldErrors.get('monitoring.cpuPanicLiftBelow');
-      if (stale === 'Must be less than CPU Trigger Above') {
+      if (stale === t('config.err.liftBelowTrigger')) {
         paintFieldError('monitoring.cpuPanicLiftBelow', null);
       }
     }
@@ -391,37 +391,37 @@ function bindActions() {
 
 async function onSave() {
   if (!revalidateAll()) {
-    showBanner('Fix highlighted fields before saving.', 'error');
+    showBanner(t('config.msg.fixFields'), 'error');
     updateDirtyState();
     return;
   }
   const res = await api('/api/dashboard/config', 'POST', currentConfig);
   if (res === AUTH_REQUIRED) { window.location.href = '/sentinel.html'; return; }
-  if (res === null) { showBanner('Network error — try again.', 'error'); return; }
+  if (res === null) { showBanner(t('config.msg.networkError'), 'error'); return; }
   if (!res.ok) {
     const fields = (res.body && res.body.fields) || [];
     paintServerErrors(fields);
-    showBanner('Server rejected configuration. See highlighted fields.', 'error');
+    showBanner(t('config.msg.serverRejected'), 'error');
     return;
   }
   originalConfig = deepClone(currentConfig);
-  document.getElementById('last-saved').textContent = 'Saved ' + new Date().toLocaleTimeString();
+  document.getElementById('last-saved').textContent = t('config.savedAt', { time: new Date().toLocaleTimeString(I18N.locale()) });
   document.getElementById('dirty-badge').classList.add('hidden');
   document.getElementById('btn-save').disabled = true;
-  showBanner('Configuration saved. Changes are live — no restart needed.', 'success');
+  showBanner(t('config.msg.saved'), 'success');
 }
 
 async function onResetDefaults() {
-  if (!confirm('Reset ALL settings to factory defaults? Auth secrets and HTTP port are preserved.')) return;
+  if (!confirm(t('config.confirmReset'))) return;
   const res = await api('/api/dashboard/config/reset', 'POST');
   if (res === AUTH_REQUIRED) { window.location.href = '/sentinel.html'; return; }
-  if (res === null) { showBanner('Network error — try again.', 'error'); return; }
-  if (!res.ok) { showBanner('Reset failed.', 'error'); return; }
+  if (res === null) { showBanner(t('config.msg.networkError'), 'error'); return; }
+  if (!res.ok) { showBanner(t('config.msg.resetFailed'), 'error'); return; }
   originalConfig = (res.body && res.body.config) ? res.body.config : res.body;
   currentConfig  = deepClone(originalConfig);
   renderForm();
   updateDirtyState();
-  showBanner('Reset to defaults.', 'success');
+  showBanner(t('config.msg.resetDone'), 'success');
 }
 
 
@@ -434,7 +434,7 @@ async function boot() {
   }
   if (!res.ok || !res.body) {
     document.getElementById('eq-redirect-overlay').textContent =
-      'Failed to load configuration. Redirecting to dashboard...';
+      t('config.loadFailed');
     document.getElementById('eq-redirect-overlay').classList.remove('hidden');
     setTimeout(() => { window.location.href = '/sentinel.html'; }, 1500);
     return;

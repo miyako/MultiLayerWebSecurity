@@ -4,7 +4,7 @@ body {
   margin: 0;
   background: var(--bg, #0d1117);
   color: var(--text);
-  font-family: 'Rajdhani', -apple-system, sans-serif;
+  font-family: 'Rajdhani', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, -apple-system, sans-serif;
   min-height: 100vh;
 }
 .hidden { display: none !important; }
@@ -37,7 +37,7 @@ body {
 }
 .back-link:hover { background: rgba(29,111,235,0.10); }
 
-.meta-ts { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-3); }
+.meta-ts { font-family: 'Share Tech Mono', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, monospace; font-size: 11px; color: var(--text-3); }
 
 .dirty-badge {
   background: var(--amber, #d29922); color: #000;
@@ -56,7 +56,7 @@ body {
   padding: 14px 20px;
 }
 .eq-section-card > summary {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Rajdhani', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, sans-serif;
   font-weight: 600; font-size: 14px;
   letter-spacing: 1.2px; text-transform: uppercase;
   color: var(--accent);
@@ -81,7 +81,7 @@ body {
 .eq-row:last-child { border-bottom: none; }
 
 .eq-label {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Rajdhani', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, sans-serif;
   font-size: 13px; color: var(--text);
   display: flex; align-items: center; gap: 6px;
 }
@@ -101,7 +101,7 @@ body {
 
 
 .eq-input {
-  font-family: 'Share Tech Mono', monospace; font-size: 13px;
+  font-family: 'Share Tech Mono', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, monospace; font-size: 13px;
   background: rgba(255,255,255,0.03);
   border: 1px solid var(--border-soft, var(--border, #1c2128));
   color: var(--text);
@@ -136,9 +136,9 @@ body {
 
 .eq-error {
   color: var(--red, #da3633); font-size: 11px;
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Rajdhani', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, sans-serif;
 }
-.eq-unit { color: var(--text-3); font-size: 11px; font-family: 'Share Tech Mono', monospace; }
+.eq-unit { color: var(--text-3); font-size: 11px; font-family: 'Share Tech Mono', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, monospace; }
 
 
 .eq-error-banner {

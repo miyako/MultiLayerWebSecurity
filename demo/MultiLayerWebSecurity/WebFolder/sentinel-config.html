@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Security Equalizer — Sentinel</title>
+  <title data-i18n="config.pageTitle">Security Equalizer — Sentinel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <script>(function(){var t=localStorage.getItem('sentinel-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}());</script>
+  <script src="i18n.js"></script>
+  <script src="i18n.config.js"></script>
   <link rel="stylesheet" href="sentinel.css">
   <link rel="stylesheet" href="sentinel-config.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMyIgZmlsbD0iIzFkNmZlYiIvPjx0ZXh0IHg9IjgiIHk9IjEyIiBmb250LXNpemU9IjExIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlM8L3RleHQ+PC9zdmc+">
@@ -15,7 +17,7 @@
 <body>
 
 
-<div id="eq-redirect-overlay" class="hidden">
+<div id="eq-redirect-overlay" class="hidden" data-i18n="config.sessionRequired">
   Session required. Redirecting to dashboard...
 </div>
 
@@ -24,18 +26,19 @@
 
   <header class="eq-header">
     <div class="header-left">
-      <a href="/sentinel.html" class="back-link">← Dashboard</a>
+      <a href="/sentinel.html" class="back-link" data-i18n="config.backToDashboard">← Dashboard</a>
       <div class="header-title">
-        <h1>Security Equalizer</h1>
-        <p>Configuration Editor — changes apply immediately, no restart</p>
+        <h1 data-i18n="config.title">Security Equalizer</h1>
+        <p data-i18n="config.subtitle">Configuration Editor — changes apply immediately, no restart</p>
       </div>
     </div>
     <div class="header-right">
-      <span id="dirty-badge" class="dirty-badge hidden">UNSAVED CHANGES</span>
+      <button type="button" class="btn btn-sm" data-lang-toggle>JA</button>
+      <span id="dirty-badge" class="dirty-badge hidden" data-i18n="config.unsaved">UNSAVED CHANGES</span>
       <span id="last-saved" class="meta-ts">—</span>
-      <button class="btn btn-secondary" id="btn-reset-defaults">Reset to Defaults</button>
+      <button class="btn btn-secondary" id="btn-reset-defaults" data-i18n="config.resetDefaults">Reset to Defaults</button>
       <button class="btn btn-primary" id="btn-save" disabled>
-        <span class="btn-icon">✓</span> Save Configuration
+        <span class="btn-icon">✓</span> <span data-i18n="config.save">Save Configuration</span>
       </button>
     </div>
   </header>
