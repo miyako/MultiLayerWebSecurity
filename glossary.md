@@ -65,7 +65,7 @@ Full-width `（）` and `：` in prose. First occurrence of a technical term: �
 | sniper queue / drone queue | スナイパーキュー / ドローンキュー | |
 | scoring rubric | スコアリング基準 | |
 | signal | シグナル | |
-| brute force | ブルートフォース攻撃 | |
+| brute force | 総当たり攻撃 | first occurrence: 総当たり攻撃（brute force） |
 | credential stuffing | クレデンシャルスタッフィング | |
 | lockout | ロックアウト | |
 | static passphrase | 静的パスフレーズ | |
@@ -96,4 +96,5 @@ Full-width `（）` and `：` in prose. First occurrence of a technical term: �
 |---|---|---|
 | Sentinel, Sonar, DoSGuard, … | (unchanged) | product, class and method names stay in English |
 | Technical Note | テクニカルノート | |
+| By <name>, Quality Support Engineer, 4D Morocco | <name>（4D Morocco クオリティサポートエンジニア） | byline format used in other 4D Japan technical notes |
 | Dashboard UI labels (Clear All, IP Blacklist, Security Equalizer, ACTIVE, STALLED) | (unchanged for now) | revisit if the dashboard UI is localised in Phase 5 |
