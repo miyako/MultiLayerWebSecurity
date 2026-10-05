@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><preferences stamp="20">
+	<com.4d>
+		<web>
+			<standalone_server>
+				<configuration listening_address="::" port_number="8045" publish_at_startup="false" session_mode="1"/>
+				<options>
+					<web_passwords kind="0"/>
+					<keep_alive requests_number="20000"/>
+					<cors enabled="false"/>
+				</options>
+				<rest launch_at_startup="true"/>
+			</standalone_server>
+		</web>
+		<interface>
+			<developper display_toolbar="true"/>
+		</interface>
+		<general allow_user_settings="true"/>
+	</com.4d>
+</preferences>

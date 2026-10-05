@@ -1,0 +1,408 @@
+[
+    {
+        "class": "SentinelAuth",
+        "method": "handleAuthStatus",
+        "regexPattern": "^/admin/auth/status$",
+        "verbs": "GET",
+        "comment": "Auth probe — guest-accessible. Returns {authenticated, privilege}. Called on page load."
+    },
+    {
+        "class": "SentinelAuth",
+        "method": "handleLogin",
+        "regexPattern": "^/admin/auth/login$",
+        "verbs": "POST",
+        "comment": "Auth login — guest-accessible. Body: {passphrase}. Grants sentinelAdmin on success."
+    },
+    {
+        "class": "SentinelAuth",
+        "method": "handleLogout",
+        "regexPattern": "^/admin/auth/logout$",
+        "verbs": "POST",
+        "comment": "Auth logout — sentinelAdmin only. Clears all session privileges."
+    },
+    {
+        "class": "SentinelAuth",
+        "method": "handleGeneratePassphrase",
+        "regexPattern": "^/admin/auth/generate-passphrase$",
+        "verbs": "POST",
+        "comment": "DPG — generate fresh 8-char code into pending pool (guest, IP rate-limited 10/min)"
+    },
+    {
+        "class": "SentinelAuth",
+        "method": "handleClearDynamic",
+        "regexPattern": "^/admin/auth/clear-dynamic$",
+        "verbs": "POST",
+        "comment": "DPG — admin clears the active dynamic passphrase without logging out"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleStatus",
+        "regexPattern": "^/admin/status$",
+        "verbs": "GET",
+        "comment": "Dashboard telemetry polling endpoint (called ~1Hz by sentinel.js)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleLogs",
+        "regexPattern": "^/admin/logs$",
+        "verbs": "GET",
+        "comment": "Live log feed for dashboard"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleToggleBlitz",
+        "regexPattern": "^/admin/toggle/blitz$",
+        "verbs": "GET, POST",
+        "comment": "Shield Interceptor toggle (frontend codename 'blitz')"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleToggleBlitz",
+        "regexPattern": "^/admin/toggle/shield$",
+        "verbs": "GET, POST",
+        "comment": "Shield Interceptor toggle (canonical backend route)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleToggleRateLimit",
+        "regexPattern": "^/admin/toggle/ratelimit$",
+        "verbs": "GET, POST",
+        "comment": "Rate-Limit Shield toggle"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleToggleHandler",
+        "regexPattern": "^/admin/toggle/handler$",
+        "verbs": "GET, POST",
+        "comment": "Handler Defense master toggle (off = full bypass)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleToggleMaster",
+        "regexPattern": "^/admin/toggle/master$",
+        "verbs": "GET, POST",
+        "comment": "Global Defense Master — single switch bypassing every defense layer (DoSGuard + Sonar) without resetting state"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleToggleWAF",
+        "regexPattern": "^/admin/toggle/waf$",
+        "verbs": "GET, POST",
+        "comment": "WAF Inspector toggle (recon + canonicalization)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleAttackDos",
+        "regexPattern": "^/admin/attack/dos$",
+        "verbs": "POST",
+        "comment": "Launch CPU Armageddon attack simulation"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleAttackBandwidth",
+        "regexPattern": "^/admin/attack/bandwidth$",
+        "verbs": "POST",
+        "comment": "Launch Bandwidth Overcharge attack simulation"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleAttackHeaderOverflow",
+        "regexPattern": "^/admin/attack/headeroverflow$",
+        "verbs": "POST",
+        "comment": "Phase 2: Launch Header Overflow attack simulation"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleAttackGhostFlood",
+        "regexPattern": "^/admin/attack/ghostflood$",
+        "verbs": "POST",
+        "comment": "Phase 2: Launch Ghost Flood distributed IP simulation"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleReport",
+        "regexPattern": "^/admin/report$",
+        "verbs": "GET",
+        "comment": "Generate HTML status report (opens in new tab)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handlePanicTrigger",
+        "regexPattern": "^/admin/panic/trigger$",
+        "verbs": "POST",
+        "comment": "Phase 3: Manually engage panic mode (body: {duration, reason})"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handlePanicLift",
+        "regexPattern": "^/admin/panic/lift$",
+        "verbs": "POST",
+        "comment": "Phase 3: Manually lift panic mode"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handlePanicStatus",
+        "regexPattern": "^/admin/panic/status$",
+        "verbs": "GET",
+        "comment": "Phase 3: Current panic state"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleHoneypotHits",
+        "regexPattern": "^/admin/honeypot/hits$",
+        "verbs": "GET",
+        "comment": "Phase 3: Recent honeypot hit records (query: ?count=N)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleHoneypotStats",
+        "regexPattern": "^/admin/honeypot/stats$",
+        "verbs": "GET",
+        "comment": "Phase 3: Honeypot lifetime stats"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleWorkerStatus",
+        "regexPattern": "^/admin/workers$",
+        "verbs": "GET",
+        "comment": "Phase 3: Worker mesh health status"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleCPUDetail",
+        "regexPattern": "^/admin/cpu$",
+        "verbs": "GET",
+        "comment": "Phase 3: Full CPU sample including history and panic state"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSnapshot",
+        "regexPattern": "^/api/dashboard/snapshot$",
+        "verbs": "GET",
+        "comment": "Bulk dashboard data snapshot"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleTraffic",
+        "regexPattern": "^/api/dashboard/traffic$",
+        "verbs": "GET",
+        "comment": "Recent traffic entries for dashboard"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleBlockIP",
+        "regexPattern": "^/api/dashboard/block$",
+        "verbs": "POST",
+        "comment": "Manually block an IP"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleUnblockIP",
+        "regexPattern": "^/api/dashboard/unblock$",
+        "verbs": "POST",
+        "comment": "Manually unblock an IP"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleAllowIP",
+        "regexPattern": "^/api/dashboard/allow$",
+        "verbs": "POST",
+        "comment": "Add IP to allowlist"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleRemoveAllow",
+        "regexPattern": "^/api/dashboard/removeallow$",
+        "verbs": "POST",
+        "comment": "Remove IP from allowlist"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleGetConfig",
+        "regexPattern": "^/api/dashboard/config$",
+        "verbs": "GET",
+        "comment": "Fetch runtime configuration"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSaveConfig",
+        "regexPattern": "^/api/dashboard/config$",
+        "verbs": "POST",
+        "comment": "Save runtime configuration"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleResetConfig",
+        "regexPattern": "^/api/dashboard/config/reset$",
+        "verbs": "POST",
+        "comment": "Reset configuration to defaults"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleAlerts",
+        "regexPattern": "^/api/dashboard/alerts$",
+        "verbs": "GET",
+        "comment": "Fetch alerts list + summary (independent of snapshot)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleAckAlert",
+        "regexPattern": "^/api/dashboard/alerts/ack$",
+        "verbs": "POST",
+        "comment": "Acknowledge one or all alerts"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleClearAlerts",
+        "regexPattern": "^/api/dashboard/alerts/clear$",
+        "verbs": "POST",
+        "comment": "Clear all alerts"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSearchLogs",
+        "regexPattern": "^/api/dashboard/logs/search$",
+        "verbs": "POST",
+        "comment": "Search request logs"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleExportLogs",
+        "regexPattern": "^/api/dashboard/logs/export$",
+        "verbs": "GET",
+        "comment": "Export logs as CSV"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleGetRules",
+        "regexPattern": "^/api/dashboard/rules$",
+        "verbs": "GET",
+        "comment": "Fetch HTTPRules.json contents"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSaveRules",
+        "regexPattern": "^/api/dashboard/rules$",
+        "verbs": "POST",
+        "comment": "Save HTTPRules.json (requires web server restart to apply)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleGetHandlers",
+        "regexPattern": "^/api/dashboard/handlers$",
+        "verbs": "GET",
+        "comment": "Fetch HTTPHandlers.json contents"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSaveHandlers",
+        "regexPattern": "^/api/dashboard/handlers$",
+        "verbs": "POST",
+        "comment": "Save HTTPHandlers.json (requires web server restart to apply)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleResetGuard",
+        "regexPattern": "^/api/dashboard/guard/reset$",
+        "verbs": "POST",
+        "comment": "Reset all DoS guard state (stats, blocklist, logs, alerts, honeypot)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleClearIPLists",
+        "regexPattern": "^/api/dashboard/iplists/clear$",
+        "verbs": "POST",
+        "comment": "Clear blocklist, allowlist, and strikes inside Data/ip_lists.json (file structure preserved)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleExplainIP",
+        "regexPattern": "^/api/dashboard/explain$",
+        "verbs": "GET",
+        "comment": "Per-IP forensic timeline: status, summary, events, raw bodies"
+    },
+    {
+        "class": "DoSGuard",
+        "method": "handleHealthCheck",
+        "regexPattern": "^/health$",
+        "verbs": "GET",
+        "comment": "Health check endpoint — auth hook still runs, but bypasses defense pipeline"
+    },
+    {
+        "class": "DoSGuard",
+        "method": "handleHeavyTest",
+        "regexPattern": "^/heavy$",
+        "verbs": "GET",
+        "comment": "CPU load test endpoint — used by Attack_CPUArmageddon"
+    },
+    {
+        "class": "FileUploadHandler",
+        "method": "handleUpload",
+        "regexPattern": "^/upload/(.*)$",
+        "verbs": "POST",
+        "comment": "File uploads (auth hook runs first for IP + rate + WAF)"
+    },
+    {
+        "class": "DoSGuard",
+        "method": "handleRequest",
+        "regexPattern": "^/api/public/(.*)$",
+        "verbs": "GET, POST, PUT, DELETE, OPTIONS",
+        "comment": "Public API — auth hook handles defense; this adds rate-limit headers + body validation"
+    },
+    {
+        "class": "DoSGuard",
+        "method": "handleRequest",
+        "regexPattern": "^/public$",
+        "verbs": "GET",
+        "comment": "Public resources endpoint"
+    },
+    {
+        "class": "Honeypot",
+        "method": "handleProbe",
+        "regexPattern": "^(?:/\\.git/config|/\\.env|/admin\\.php|/wp-login\\.php|/backup\\.sql|/api/v1/token|/api/admin/users|/config\\.bak|/database\\.yml|/credentials\\.json|/\\.ssh/id_rsa|/aws-credentials)$",
+        "verbs": "GET, POST, PUT, DELETE, OPTIONS",
+        "comment": "Honeypot deception responder — auth hook records the ban, this returns a generic 403 (no Basic Auth dialog)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSonarStats",
+        "regexPattern": "^/admin/sonar/stats$",
+        "verbs": "GET",
+        "comment": "Sonar Engine — live stats: intercepted, signaled, sniperKills, droneArchived, droppedOverflow"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSonarQueue",
+        "regexPattern": "^/admin/sonar/queue$",
+        "verbs": "GET",
+        "comment": "Sonar Engine — current queue snapshot (up to 50 items from sniper + drone queues)"
+    },
+    {
+        "class": "Sentinel",
+        "method": "handleSonarArchive",
+        "regexPattern": "^/admin/sonar/archive$",
+        "verbs": "GET",
+        "comment": "Sonar Engine — last 200 drone archive entries from sonar_archive.jsonl"
+    },
+    {
+        "class": "Sentinel",
+        "method": "serveStaticAsset",
+        "regexPattern": "^/$",
+        "verbs": "GET",
+        "comment": "Static-asset gate — bare root maps to /sentinel.html (login) through the defense pipeline"
+    },
+    {
+        "class": "Sentinel",
+        "method": "serveStaticAsset",
+        "regexPattern": "^/dashboard$",
+        "verbs": "GET",
+        "comment": "Auth-walled dashboard entrypoint (no extension) — maps to /dashboard.html through _requireAuth"
+    },
+    {
+        "class": "Sentinel",
+        "method": "serveStaticAsset",
+        "regexPattern": "^/[^?]+\\.(html|css|js|svg|png|ico|woff2?)$",
+        "verbs": "GET",
+        "comment": "Static-asset gate — all WebFolder extensions routed through DoSGuard._gate (closes flood bypass); dashboard.{html,css,js} + sentinel-config.* are auth-walled inside the handler"
+    }
+]

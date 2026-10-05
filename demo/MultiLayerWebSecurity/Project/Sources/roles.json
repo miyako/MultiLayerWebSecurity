@@ -1,0 +1,127 @@
+{
+    "forceLogin": false,
+    "restrictedByDefault": true,
+
+    "privileges": [
+        {
+            "privilege": "sonar",
+            "includes": []
+        },
+        {
+            "privilege": "sentinelAdmin",
+            "includes": ["guest", "sonar"]
+        }
+    ],
+
+    "roles": [
+        {
+            "role": "administrator",
+            "privileges": ["sentinelAdmin"]
+        }
+    ],
+
+    "permissions": {
+        "allowed": [
+            {
+                "applyTo": "SentinelAuth.handleLogin",
+                "type": "singletonMethod",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "SentinelAuth.handleAuthStatus",
+                "type": "singletonMethod",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "SentinelAuth.handleLogout",
+                "type": "singletonMethod",
+                "execute": ["sentinelAdmin"]
+            },
+            {
+                "applyTo": "SentinelAuth.handleGeneratePassphrase",
+                "type": "singletonMethod",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "SentinelAuth.handleClearDynamic",
+                "type": "singletonMethod",
+                "execute": ["sentinelAdmin"]
+            },
+            {
+                "applyTo": "DoSGuard",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "FileUploadHandler",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "Sentinel",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "URLCodec",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "URLNormalizer",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "HeaderValidator",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "Honeypot",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "Sonar",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "ConfigManager",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "IPManager",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "AlertManager",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "RequestLogger",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "RulesManager",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "HandlersManager",
+                "type": "singleton",
+                "execute": ["guest"]
+            },
+            {
+                "applyTo": "ProcessOrchestrator",
+                "type": "singleton",
+                "execute": ["guest"]
+            }
+        ]
+    }
+}

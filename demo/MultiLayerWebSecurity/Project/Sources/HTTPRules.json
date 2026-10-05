@@ -1,0 +1,90 @@
+﻿[
+    {
+        "regexPattern": "^/.*$",
+        "responseHeaders": {
+            "X-Content-Type-Options": "nosniff",
+            "X-Frame-Options": "DENY",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+            "Permissions-Policy": "geolocation=(), camera=(), microphone=(), payment=(), usb=(), magnetometer=(), gyroscope=()",
+            "X-XSS-Protection": "0",
+            "Server": "Sentinel",
+            "X-Permitted-Cross-Domain-Policies": "none"
+        }
+    },
+    {
+        "regexPattern": "^/api/dashboard/.*$",
+        "responseHeaders": {
+            "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+            "Cache-Control": "no-store, no-cache, must-revalidate, private",
+            "Pragma": "no-cache",
+            "Access-Control-Allow-Origin": "http://127.0.0.1:8044",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Max-Age": "600",
+            "Vary": "Origin",
+            "X-Robots-Tag": "noindex, nofollow, noarchive"
+        }
+    },
+    {
+        "regexPattern": "^/api/public/.*$",
+        "responseHeaders": {
+            "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+            "Cache-Control": "no-store, no-cache, must-revalidate",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "600"
+        }
+    },
+    {
+        "regexPattern": "^/admin/.*$",
+        "responseHeaders": {
+            "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+            "Cache-Control": "no-store, no-cache, must-revalidate, private, max-age=0",
+            "Pragma": "no-cache",
+            "X-Robots-Tag": "noindex, nofollow, noarchive"
+        }
+    },
+    {
+        "regexPattern": "^/health$",
+        "responseHeaders": {
+            "Cache-Control": "no-store, max-age=0",
+            "Access-Control-Allow-Origin": "*",
+            "X-Robots-Tag": "noindex, nofollow"
+        }
+    },
+    {
+        "regexPattern": "^/upload/.*$",
+        "responseHeaders": {
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "Cache-Control": "no-store",
+            "X-Robots-Tag": "noindex, nofollow"
+        }
+    },
+    {
+        "regexPattern": "^/public/.*$",
+        "responseHeaders": {
+            "Cache-Control": "public, max-age=300",
+            "Access-Control-Allow-Origin": "*",
+            "X-Robots-Tag": "noindex, nofollow"
+        }
+    },
+    {
+        "regexPattern": "^/(sentinel|sentinel-config|index|dashboard)(\\.(html|css|js))?$",
+        "responseHeaders": {
+            "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'",
+            "Cache-Control": "no-cache, must-revalidate",
+            "X-Robots-Tag": "noindex, nofollow"
+        }
+    },
+    {
+        "regexPattern": "^/$",
+        "responseHeaders": {
+            "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'",
+            "Cache-Control": "no-cache, must-revalidate",
+            "X-Robots-Tag": "noindex, nofollow"
+        }
+    }
+]
