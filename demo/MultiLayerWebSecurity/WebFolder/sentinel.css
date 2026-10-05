@@ -23,8 +23,8 @@
   --purple-dim:  rgba(139,92,246,0.12);
   --blue:        #38bdf8;
   --blue-dim:    rgba(56,189,248,0.12);
-  --mono:        'Share Tech Mono', 'SF Mono', 'Courier New', monospace;
-  --ui:          'Rajdhani', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono:        'Share Tech Mono', 'SF Mono', 'Courier New', 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, monospace;
+  --ui:          'Rajdhani', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', Meiryo, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --radius:      6px;
   --radius-sm:   4px;
 }
