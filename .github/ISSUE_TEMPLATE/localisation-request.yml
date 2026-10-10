@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Before opening this issue, commit the English PDF to `document/` and the 4D project to `demo/<Name>/`.
-        Then assign the issue to **Copilot**. The agent follows `.github/copilot-instructions.md` and stops at each
+        Then assign the issue to **Copilot**. The agent follows `AGENTS.md` and stops at each
         checkpoint in the pull request for your review.
   - type: input
     id: language

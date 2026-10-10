@@ -5,7 +5,7 @@ applyTo: "document/**,src/**,figures/**,tools/**,style/**,data/**,glossary.md,te
 
 # Technical note localisation pipeline: reference
 
-The workflow and checkpoints are in `.github/copilot-instructions.md`. This file is a technical reference for
+The workflow and checkpoints are in `AGENTS.md`. This file is a technical reference for
 `tools/`. `<src>` is `source_lang` (normally `en`) and `<tgt>` is `target_lang` (e.g. `ja`).
 
 ## Pipeline
